@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container container-narrow">
+            {% if page.introduction %}
+                <div class="mb-xl">{{ page.introduction|richtext }}</div>
+            {% endif %}
+            
+            {% if page.legal_content %}
+            <div class="card mb-lg">
+                <h3>{{ page.legal_title }}</h3>
+                {{ page.legal_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.privacy_content %}
+            <div class="card mb-lg">
+                <h3>{{ page.privacy_title }}</h3>
+                {{ page.privacy_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.gdpr_content %}
+            <div class="card mb-lg">
+                <h3>{{ page.gdpr_title }}</h3>
+                {{ page.gdpr_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.cookies_content %}
+            <div class="card mb-lg">
+                <h3>{{ page.cookies_title }}</h3>
+                {{ page.cookies_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.terms_content %}
+            <div class="card mb-lg">
+                <h3>{{ page.terms_title }}</h3>
+                {{ page.terms_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.last_updated %}
+                <p class="text-center" style="color: var(--text-light);">Dernière mise à jour: {{ page.last_updated|date:"d F Y" }}</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

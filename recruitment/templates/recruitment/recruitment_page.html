@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container container-narrow">
+            {% if page.introduction %}
+                <div class="mb-xl">{{ page.introduction|richtext }}</div>
+            {% endif %}
+            
+            <div class="grid grid-2 mb-xl">
+                <div class="card">
+                    <h3>{{ page.why_join_title }}</h3>
+                    {{ page.why_join_content|richtext }}
+                </div>
+                <div class="card">
+                    <h3>{{ page.culture_title }}</h3>
+                    {{ page.culture_content|richtext }}
+                </div>
+            </div>
+            
+            {% if page.benefits_content %}
+            <div class="card mb-xl">
+                <h3>{{ page.benefits_title }}</h3>
+                {{ page.benefits_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.open_positions_content %}
+            <div class="card">
+                <h3>{{ page.open_positions_title }}</h3>
+                {{ page.open_positions_content|richtext }}
+                {% if page.application_email %}
+                    <p class="mt-md"><strong>Candidatures:</strong> <a href="mailto:{{ page.application_email }}">{{ page.application_email }}</a></p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

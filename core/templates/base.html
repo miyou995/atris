@@ -1,7 +1,10 @@
-{% load static wagtailcore_tags wagtailuserbar %}
+{% load static %}
+{% load wagtailcore_tags %}
+{% load wagtailuserbar %}
+{% load menu_tags %}
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
         <title>
@@ -10,7 +13,7 @@
             {% endblock %}
             {% block title_suffix %}
             {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %}- {{ current_site.site_name }}{% endif %}
+            {% if current_site and current_site.site_name %} - {{ current_site.site_name }}{% endif %}
             {% endblock %}
         </title>
         {% if page.search_description %}
@@ -23,18 +26,83 @@
         <base target="_blank">
         {% endif %}
 
+        {# Google Fonts #}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+
         {# Global stylesheets #}
         <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}">
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
-        {% endblock %}
+        {% endblock %}  
     </head>
 
     <body class="{% block body_class %}{% endblock %}">
         {% wagtailuserbar %}
 
-        {% block content %}{% endblock %}
+        {# Header with Navigation #}
+        <header class="site-header">
+            <div class="container">
+                <div class="header-content">
+                    <a href="/" class="site-logo">Atris</a>
+                    
+                    <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+                        ☰
+                    </button>
+                    
+                    <nav class="main-nav">
+                        {% main_menu site=request.site template="menus/main_menu.html" %}
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        {# Main Content #}
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+
+        {# Footer #}
+        <footer class="site-footer">
+            <div class="container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h4>À Propos</h4>
+                        <p>Une entreprise professionnelle dédiée à l'excellence et l'innovation.</p>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Navigation</h4>
+                        <ul>
+                            {% main_menu template="menus/footer_menu.html" %}
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Contact</h4>
+                        <ul>
+                            <li>Email: contact@atris.com</li>
+                            <li>Téléphone: +33 1 23 45 67 89</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="footer-section">
+                        <h4>Suivez-nous</h4>
+                        <ul>
+                            <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
+                            <li><a href="#" aria-label="Twitter">Twitter</a></li>
+                            <li><a href="#" aria-label="Facebook">Facebook</a></li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="footer-bottom">
+                    <p>&copy; {% now "Y" %} Atris. Tous droits réservés.</p>
+                </div>
+            </div>
+        </footer>
 
         {# Global javascript #}
         <script type="text/javascript" src="{% static 'js/core.js' %}"></script>

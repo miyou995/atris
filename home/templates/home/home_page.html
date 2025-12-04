@@ -1,11 +1,119 @@
 {% extends "base.html" %}
-
-<!-- load wagtailcore_tags by adding this: -->
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block body_class %}template-homepage{% endblock %}
 
-<!-- replace everything below with: -->
 {% block content %}
-    {{ page.body|richtext }}
+    {# Hero Section #}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}
+                    <p>{{ page.hero_subtitle }}</p>
+                {% endif %}
+                {% if page.hero_cta_text and page.hero_cta_link %}
+                    <a href="{{ page.hero_cta_link }}" class="btn btn-primary btn-large">{{ page.hero_cta_text }}</a>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    {# Introduction Section #}
+    {% if page.introduction %}
+    <section class="section">
+        <div class="container container-narrow">
+            <div class="section-header">
+                {{ page.introduction|richtext }}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {# Services Section #}
+    {% if page.services_title %}
+    <section class="section section-alt">
+        <div class="container">
+            <div class="section-header">
+                <h2>{{ page.services_title }}</h2>
+                {% if page.services_description %}
+                    {{ page.services_description|richtext }}
+                {% endif %}
+            </div>
+            
+            <div class="grid grid-3">
+                {# These would be dynamically loaded from expertise pages #}
+                <div class="card">
+                    <div class="card-icon">💻</div>
+                    <h3>Développement Web</h3>
+                    <p>Solutions web modernes et performantes adaptées à vos besoins.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🎨</div>
+                    <h3>Design & UX</h3>
+                    <p>Interfaces utilisateur intuitives et designs attractifs.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <h3>Stratégie Digitale</h3>
+                    <p>Accompagnement stratégique pour votre transformation digitale.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {# Statistics Section #}
+    {% if page.stats_title %}
+    <section class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2>{{ page.stats_title }}</h2>
+            </div>
+            
+            <div class="stats">
+                {% if page.stat1_number %}
+                <div class="stat-item">
+                    <span class="stat-number">{{ page.stat1_number }}</span>
+                    <span class="stat-label">{{ page.stat1_label }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.stat2_number %}
+                <div class="stat-item">
+                    <span class="stat-number">{{ page.stat2_number }}</span>
+                    <span class="stat-label">{{ page.stat2_label }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.stat3_number %}
+                <div class="stat-item">
+                    <span class="stat-number">{{ page.stat3_number }}</span>
+                    <span class="stat-label">{{ page.stat3_label }}</span>
+                </div>
+                {% endif %}
+                
+                {% if page.stat4_number %}
+                <div class="stat-item">
+                    <span class="stat-number">{{ page.stat4_number }}</span>
+                    <span class="stat-label">{{ page.stat4_label }}</span>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% endif %}
+
+    {# Call to Action Section #}
+    {% if page.cta_title %}
+    <section class="section section-alt">
+        <div class="container text-center">
+            <h2>{{ page.cta_title }}</h2>
+            {% if page.cta_description %}
+                <p class="mb-lg">{{ page.cta_description }}</p>
+            {% endif %}
+            <a href="/contact/" class="btn btn-primary btn-large">{{ page.cta_button_text }}</a>
+        </div>
+    </section>
+    {% endif %}
 {% endblock %}

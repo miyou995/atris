@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.title }}</h1>
+                {% if page.summary %}<p>{{ page.summary }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container container-narrow">
+            {% if page.description %}
+                <div class="mb-xl">{{ page.description|richtext }}</div>
+            {% endif %}
+            
+            {% if page.key_points %}
+                <div class="card mb-xl">
+                    <h3>Points Clés</h3>
+                    {{ page.key_points|richtext }}
+                </div>
+            {% endif %}
+            
+            {% if page.technologies %}
+                <div class="card">
+                    <h3>Technologies</h3>
+                    <p>{{ page.technologies }}</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            {% if page.introduction %}
+                <div class="section-header">{{ page.introduction|richtext }}</div>
+            {% endif %}
+            
+            <div class="grid grid-3">
+                {% for expertise in expertises %}
+                    <div class="card">
+                        {% if expertise.icon %}
+                            <div class="card-icon">{{ expertise.icon }}</div>
+                        {% endif %}
+                        <h3>{{ expertise.title }}</h3>
+                        {% if expertise.summary %}<p>{{ expertise.summary }}</p>{% endif %}
+                        <a href="{% pageurl expertise %}" class="btn btn-secondary mt-md">En savoir plus</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

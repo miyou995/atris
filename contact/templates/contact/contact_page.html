@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            <div class="grid grid-2">
+                <div>
+                    {% if page.introduction %}
+                        <div class="mb-lg">{{ page.introduction|richtext }}</div>
+                    {% endif %}
+                    
+                    <div class="card">
+                        <h3>Informations de Contact</h3>
+                        {% if page.address %}<p><strong>Adresse:</strong><br>{{ page.address|linebreaks }}</p>{% endif %}
+                        {% if page.phone %}<p><strong>Téléphone:</strong> {{ page.phone }}</p>{% endif %}
+                        {% if page.email %}<p><strong>Email:</strong> <a href="mailto:{{ page.email }}">{{ page.email }}</a></p>{% endif %}
+                        {% if page.office_hours %}<p><strong>Horaires:</strong> {{ page.office_hours }}</p>{% endif %}
+                    </div>
+                    
+                    {% if page.map_embed_code %}
+                    <div class="mt-lg">
+                        {{ page.map_embed_code|safe }}
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3>Envoyez-nous un message</h3>
+                        <form action="{% pageurl page %}" method="POST">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit" class="btn btn-primary mt-md">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

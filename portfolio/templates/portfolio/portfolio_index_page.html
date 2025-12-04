@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container">
+            {% if page.introduction %}
+                <div class="section-header">{{ page.introduction|richtext }}</div>
+            {% endif %}
+            
+            <div class="grid grid-3 mb-xl">
+                {% for project in projects %}
+                    <div class="card">
+                        {% if project.featured_image %}
+                            {% image project.featured_image fill-400x300 as img %}
+                            <img src="{{ img.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: var(--radius-lg); margin-bottom: var(--spacing-md);">
+                        {% endif %}
+                        <h3>{{ project.title }}</h3>
+                        {% if project.summary %}<p>{{ project.summary }}</p>{% endif %}
+                        <a href="{% pageurl project %}" class="btn btn-secondary mt-md">Voir le projet</a>
+                    </div>
+                {% endfor %}
+            </div>
+            
+            {% if page.client_logos.all %}
+            <div class="section-header">
+                <h2>{{ page.clients_title }}</h2>
+            </div>
+            <div class="grid grid-4">
+                {% for logo in page.client_logos.all %}
+                    <div class="card text-center">
+                        {% if logo.logo %}
+                            {% image logo.logo max-200x100 as img %}
+                            <img src="{{ img.url }}" alt="{{ logo.client_name }}" style="max-width: 100%; height: auto;">
+                        {% else %}
+                            <p>{{ logo.client_name }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
