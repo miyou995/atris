@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.hero_title }}</h1>
+                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container container-narrow">
+            {% if page.introduction %}
+                <div class="mb-xl">{{ page.introduction|richtext }}</div>
+            {% endif %}
+            
+            <div class="grid grid-2 mb-xl">
+                <div class="card">
+                    <h3>{{ page.mission_title }}</h3>
+                    {{ page.mission_content|richtext }}
+                </div>
+                <div class="card">
+                    <h3>{{ page.vision_title }}</h3>
+                    {{ page.vision_content|richtext }}
+                </div>
+            </div>
+            
+            {% if page.values_content %}
+            <div class="card mb-xl">
+                <h3>{{ page.values_title }}</h3>
+                {{ page.values_content|richtext }}
+            </div>
+            {% endif %}
+            
+            {% if page.team_description %}
+            <div class="section-header">
+                <h2>{{ page.team_title }}</h2>
+                {{ page.team_description|richtext }}
+            </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

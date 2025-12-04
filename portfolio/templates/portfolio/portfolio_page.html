@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>{{ page.title }}</h1>
+                {% if page.client_name %}<p>Client: {{ page.client_name }}</p>{% endif %}
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container container-narrow">
+            {% if page.summary %}
+                <p class="mb-xl" style="font-size: 1.25rem; color: var(--text-secondary);">{{ page.summary }}</p>
+            {% endif %}
+            
+            {% if page.challenge %}
+                <div class="card mb-lg">
+                    <h3>Défi</h3>
+                    {{ page.challenge|richtext }}
+                </div>
+            {% endif %}
+            
+            {% if page.solution %}
+                <div class="card mb-lg">
+                    <h3>Solution</h3>
+                    {{ page.solution|richtext }}
+                </div>
+            {% endif %}
+            
+            {% if page.results %}
+                <div class="card mb-lg">
+                    <h3>Résultats</h3>
+                    {{ page.results|richtext }}
+                </div>
+            {% endif %}
+            
+            {% if page.gallery_images.all %}
+                <h3 class="mt-xl mb-md">Galerie</h3>
+                <div class="grid grid-2">
+                    {% for item in page.gallery_images.all %}
+                        <div>
+                            {% image item.image fill-600x400 as img %}
+                            <img src="{{ img.url }}" alt="{{ item.caption }}" style="width: 100%; border-radius: var(--radius-lg);">
+                            {% if item.caption %}<p class="mt-sm">{{ item.caption }}</p>{% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
