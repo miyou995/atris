@@ -138,6 +138,7 @@ USE_TZ = True
 
 
 SITE_ID = 1
+show_in_menus = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 

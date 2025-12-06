@@ -52,6 +52,7 @@ class ContactPage(AbstractEmailForm):
         verbose_name="Message de remerciement",
         help_text="Texte affiché après la soumission du formulaire",
     )
+    social_links = models.TextField(blank=True, help_text='Liste de liens réseaux sociaux séparés par virgule')
 
     content_panels = AbstractEmailForm.content_panels + [
         FieldPanel("hero_title"),
@@ -65,6 +66,7 @@ class ContactPage(AbstractEmailForm):
             ]
         ),
         FieldPanel("office_hours"),
+        FieldPanel("social_links"),
         FieldPanel("map_embed_code"),
         InlinePanel("form_fields", label="Champs du formulaire"),
         FieldPanel("thank_you_text"),

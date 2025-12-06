@@ -1,7 +1,9 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField,StreamField
 from wagtail.models import Page
+# from wagtail.admin.panels import StreamFieldPanel
+
 
 
 class RecruitmentPage(Page):
@@ -65,7 +67,7 @@ class RecruitmentPage(Page):
         verbose_name="Email de candidature",
         help_text="Email pour recevoir les candidatures",
     )
-
+    # testimonials = StreamField([('testimonial', TestimonialBlock())], blank=True)
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
@@ -80,7 +82,8 @@ class RecruitmentPage(Page):
         FieldPanel("open_positions_title"),
         FieldPanel("open_positions_content"),
         FieldPanel("application_email"),
-    ]
+        # StreamFieldPanel('testimonials'),
+        ]
 
     class Meta:
         verbose_name = "Page Recrutement"

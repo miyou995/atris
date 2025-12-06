@@ -74,6 +74,7 @@ class ExpertisePage(Page):
         index.SearchField("summary"),
         index.SearchField("description"),
     ]
+    tags = models.CharField(max_length=255, blank=True, help_text="Comma-separated tags")
 
     content_panels = Page.content_panels + [
         FieldPanel("icon"),
@@ -82,6 +83,7 @@ class ExpertisePage(Page):
         FieldPanel("description"),
         FieldPanel("key_points"),
         FieldPanel("technologies"),
+        FieldPanel("tags")
     ]
 
     class Meta:

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% load wagtailcore_tags %}
+
+{% block body_class %}template-blogindexpage{% endblock %}
+
+{% block content %}
+ <article>
+                <h3>the body</h3>
+                {% for block in page.body %}
+                    {% if block.block_type == 'heading' %}
+                        <h1> this is the value {{ block.value }}</h1>
+                    {% else %}
+                        <section class="block-{{ block.block_type }}">
+                            {% include_block block %}
+                        </section>
+                    {% endif %}
+                {% endfor %}
+            </article>
+    <h1>{{ page.title }}</h1>
+
+    <div class="intro">{{ page.intro|richtext }}</div>
+    {% for post in page.get_children %}
+        <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+        {% comment %} {{ post.specific.intro }} {% endcomment %}
+        {{ post.specific.body|richtext }}
+    {% endfor %}
+
+{% endblock %}

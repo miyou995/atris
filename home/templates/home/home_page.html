@@ -1,119 +1,82 @@
 {% extends "base.html" %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
-{% block body_class %}template-homepage{% endblock %}
-
 {% block content %}
-    {# Hero Section #}
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>{{ page.hero_title }}</h1>
-                {% if page.hero_subtitle %}
-                    <p>{{ page.hero_subtitle }}</p>
-                {% endif %}
-                {% if page.hero_cta_text and page.hero_cta_link %}
-                    <a href="{{ page.hero_cta_link }}" class="btn btn-primary btn-large">{{ page.hero_cta_text }}</a>
-                {% endif %}
-            </div>
-        </div>
-    </section>
 
-    {# Introduction Section #}
-    {% if page.introduction %}
-    <section class="section">
-        <div class="container container-narrow">
-            <div class="section-header">
-                {{ page.introduction|richtext }}
-            </div>
-        </div>
-    </section>
-    {% endif %}
+<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
 
-    {# Services Section #}
-    {% if page.services_title %}
-    <section class="section section-alt">
-        <div class="container">
-            <div class="section-header">
-                <h2>{{ page.services_title }}</h2>
-                {% if page.services_description %}
-                    {{ page.services_description|richtext }}
-                {% endif %}
-            </div>
-            
-            <div class="grid grid-3">
-                {# These would be dynamically loaded from expertise pages #}
-                <div class="card">
-                    <div class="card-icon">💻</div>
-                    <h3>Développement Web</h3>
-                    <p>Solutions web modernes et performantes adaptées à vos besoins.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">🎨</div>
-                    <h3>Design & UX</h3>
-                    <p>Interfaces utilisateur intuitives et designs attractifs.</p>
-                </div>
-                <div class="card">
-                    <div class="card-icon">📊</div>
-                    <h3>Stratégie Digitale</h3>
-                    <p>Accompagnement stratégique pour votre transformation digitale.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    {% endif %}
+<div class="overflow-x-hidden">
 
-    {# Statistics Section #}
-    {% if page.stats_title %}
-    <section class="section">
-        <div class="container">
-            <div class="section-header">
-                <h2>{{ page.stats_title }}</h2>
-            </div>
-            
-            <div class="stats">
-                {% if page.stat1_number %}
-                <div class="stat-item">
-                    <span class="stat-number">{{ page.stat1_number }}</span>
-                    <span class="stat-label">{{ page.stat1_label }}</span>
-                </div>
-                {% endif %}
-                
-                {% if page.stat2_number %}
-                <div class="stat-item">
-                    <span class="stat-number">{{ page.stat2_number }}</span>
-                    <span class="stat-label">{{ page.stat2_label }}</span>
-                </div>
-                {% endif %}
-                
-                {% if page.stat3_number %}
-                <div class="stat-item">
-                    <span class="stat-number">{{ page.stat3_number }}</span>
-                    <span class="stat-label">{{ page.stat3_label }}</span>
-                </div>
-                {% endif %}
-                
-                {% if page.stat4_number %}
-                <div class="stat-item">
-                    <span class="stat-number">{{ page.stat4_number }}</span>
-                    <span class="stat-label">{{ page.stat4_label }}</span>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </section>
-    {% endif %}
+    {# ---------- HERO ---------- #}
+    <section class="h-screen flex items-center justify-center text-center bg-gray-900 text-white relative">
+        {% if page.hero_image %}
+            {% image page.hero_image original as hero %}
+            <img src="{{ hero.url }}" class="absolute inset-0 w-full h-full object-cover opacity-70">
+        {% endif %}
 
-    {# Call to Action Section #}
-    {% if page.cta_title %}
-    <section class="section section-alt">
-        <div class="container text-center">
-            <h2>{{ page.cta_title }}</h2>
-            {% if page.cta_description %}
-                <p class="mb-lg">{{ page.cta_description }}</p>
+        <div data-aos="fade-up" class="z-10 max-w-2xl px-6">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4">
+                {{ page.hero_title }}
+            </h1>
+
+            <p class="text-lg md:text-xl opacity-90 mb-6">
+                {{ page.hero_subtitle }}
+            </p>
+
+            {% if page.hero_cta_link %}
+                <a href="{{ page.hero_cta_link }}"
+                   class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-semibold transition">
+                    {{ page.hero_cta_text }}
+                </a>
             {% endif %}
-            <a href="/contact/" class="btn btn-primary btn-large">{{ page.cta_button_text }}</a>
         </div>
     </section>
-    {% endif %}
+
+
+    {# ---------- INTRO ---------- #}
+    <section class="py-24 container mx-auto px-6" data-aos="fade-up">
+        <div class="prose max-w-none">
+            {{ page.introduction|richtext }}
+        </div>
+    </section>
+
+
+    {# ---------- SERVICES ---------- #}
+    <section class="py-24 bg-gray-50" id="services">
+        <div class="container mx-auto px-6">
+            <h2 class="text-3xl font-bold mb-4" data-aos="fade-right">{{ page.services_title }}</h2>
+
+            <div class="prose mb-10" data-aos="fade-right">
+                {{ page.services_description|richtext }}
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                {% for i in "123" %}
+                    <div data-aos="zoom-in" class="bg-white p-6 shadow rounded-xl">
+                        <h3 class="font-semibold text-xl mb-3">Service {{ forloop.counter }}</h3>
+                        <p class="opacity-80">Description du service Lorem ipsum dolor sit amet…</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+
+    {# ---------- CTA FINAL ---------- #}
+    <section class="py-32 text-center text-white bg-blue-600" id="cta">
+        <h2 class="text-4xl font-bold mb-6" data-aos="fade-up">{{ page.cta_title }}</h2>
+        <p data-aos="fade-up" class="max-w-xl mx-auto mb-6">{{ page.cta_description }}</p>
+
+        <a href="/contact"
+           class="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold shadow hover:scale-105 transition"
+           data-aos="zoom-in">
+            {{ page.cta_button_text }}
+        </a>
+    </section>
+
+</div>
+
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<script>AOS.init();</script>
+
 {% endblock %}
