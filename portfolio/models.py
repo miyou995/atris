@@ -109,6 +109,7 @@ class PortfolioPage(Page):
         index.SearchField("summary"),
         index.SearchField("challenge"),
     ]
+    gallery_images = InlinePanel('gallery', label="Galerie")
 
     content_panels = Page.content_panels + [
         FieldPanel("client_name"),

@@ -1,6 +1,6 @@
 from django.db import models
 from wagtail import blocks
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel,MultiFieldPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import Image
@@ -52,7 +52,8 @@ class AboutPage(Page):
     )
 
     team_description = RichTextField(blank=True, verbose_name="Description de l'équipe")
-
+    # seo_title = models.CharField(max_length=255, blank=True)
+    # seo_description = models.TextField(blank=True)
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
@@ -66,6 +67,7 @@ class AboutPage(Page):
         FieldPanel("values_content"),
         FieldPanel("team_title"),
         FieldPanel("team_description"),
+        # MultiFieldPanel([FieldPanel('seo_title'), FieldPanel('seo_description')], heading="SEO"),
     ]
 
     class Meta:

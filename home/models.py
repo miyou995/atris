@@ -1,5 +1,5 @@
 from django.db import models
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel,MultiFieldPanel
 from wagtail.fields import RichTextField
 from wagtail.models import Page
 
@@ -57,38 +57,6 @@ class HomePage(Page):
         verbose_name="Titre de la section statistiques",
     )
 
-    stat1_number = models.CharField(
-        max_length=50, blank=True, verbose_name="Statistique 1 - Nombre"
-    )
-
-    stat1_label = models.CharField(
-        max_length=100, blank=True, verbose_name="Statistique 1 - Label"
-    )
-
-    stat2_number = models.CharField(
-        max_length=50, blank=True, verbose_name="Statistique 2 - Nombre"
-    )
-
-    stat2_label = models.CharField(
-        max_length=100, blank=True, verbose_name="Statistique 2 - Label"
-    )
-
-    stat3_number = models.CharField(
-        max_length=50, blank=True, verbose_name="Statistique 3 - Nombre"
-    )
-
-    stat3_label = models.CharField(
-        max_length=100, blank=True, verbose_name="Statistique 3 - Label"
-    )
-
-    stat4_number = models.CharField(
-        max_length=50, blank=True, verbose_name="Statistique 4 - Nombre"
-    )
-
-    stat4_label = models.CharField(
-        max_length=100, blank=True, verbose_name="Statistique 4 - Label"
-    )
-
     # Call to Action
     cta_title = models.CharField(
         max_length=255,
@@ -103,7 +71,10 @@ class HomePage(Page):
         default="Contactez-nous",
         verbose_name="Texte du bouton CTA final",
     )
-
+    # seo_title = models.CharField(max_length=255, blank=True)
+    # seo_description = models.TextField(blank=True)
+    
+    
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
@@ -114,17 +85,11 @@ class HomePage(Page):
         FieldPanel("services_title"),
         FieldPanel("services_description"),
         FieldPanel("stats_title"),
-        FieldPanel("stat1_number"),
-        FieldPanel("stat1_label"),
-        FieldPanel("stat2_number"),
-        FieldPanel("stat2_label"),
-        FieldPanel("stat3_number"),
-        FieldPanel("stat3_label"),
-        FieldPanel("stat4_number"),
-        FieldPanel("stat4_label"),
         FieldPanel("cta_title"),
         FieldPanel("cta_description"),
         FieldPanel("cta_button_text"),
+        # MultiFieldPanel([FieldPanel('seo_title'), FieldPanel('seo_description')], heading="SEO"),
+        
     ]
 
     class Meta:

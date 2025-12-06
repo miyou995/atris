@@ -1,0 +1,290 @@
+[
+{
+  "model": "home.homepage",
+  "pk": 3,
+  "fields": {
+    "hero_title": "Bienvenue chez Atris",
+    "hero_subtitle": "Votre partenaire pour la transformation digitale",
+    "hero_image": 2,
+    "hero_cta_text": "Découvrir nos services",
+    "hero_cta_link": "/expertise/",
+    "introduction": "",
+    "services_title": "Nos Services",
+    "services_description": "",
+    "stats_title": "Nos Chiffres",
+    "cta_title": "Prêt à démarrer votre projet ?",
+    "cta_description": "",
+    "cta_button_text": "Contactez-nous"
+  }
+},
+{
+  "model": "legal.legalpage",
+  "pk": 10,
+  "fields": {
+    "hero_title": "Mentions Légales & RGPD",
+    "introduction": "",
+    "legal_title": "Mentions Légales",
+    "legal_content": "",
+    "privacy_title": "Politique de Confidentialité",
+    "privacy_content": "",
+    "gdpr_title": "Protection des Données (RGPD)",
+    "gdpr_content": "",
+    "cookies_title": "Politique des Cookies",
+    "cookies_content": "",
+    "terms_title": "Conditions d'Utilisation",
+    "terms_content": "",
+    "last_updated": null
+  }
+},
+{
+  "model": "about.aboutpage",
+  "pk": 4,
+  "fields": {
+    "hero_title": "Qui sommes-nous ?",
+    "hero_subtitle": "ATR-IS",
+    "hero_image": 2,
+    "introduction": "<p data-block-key=\"lwfbm\">Secteur : Entreprise de Services du Numérique (ESN) Activité : Conseil IT, transformation digitale, expertise Data, Cloud, développement de solutions sur mesure.</p>",
+    "mission_title": "Notre Mission",
+    "mission_content": "",
+    "vision_title": "Notre Vision",
+    "vision_content": "<p data-block-key=\"kaxwl\">Projet piloté par : Mputu Prescillia, Chargée de communication – ATRIS</p>",
+    "values_title": "Nos Valeurs",
+    "values_content": "<p data-block-key=\"tpcnz\">Le site actuel d’ATR-IS ne reflète plus l’identité, le positionnement ni les ambitions de l’entreprise. Il est perçu comme trop classique, peu vivant, trop semblable aux sites standards du secteur ESN.</p>",
+    "team_title": "Notre Équipe",
+    "team_description": ""
+  }
+},
+{
+  "model": "recruitment.recruitmentpage",
+  "pk": 7,
+  "fields": {
+    "hero_title": "Rejoignez Notre Équipe",
+    "hero_subtitle": "Candidats potentiel",
+    "hero_image": 2,
+    "introduction": "<p data-block-key=\"0h0kx\"> Candidats potentiels : profils tech, consultants, data engineers, développeurs, chefs de projets </p>",
+    "why_join_title": "Pourquoi nous rejoindre ?",
+    "why_join_content": "",
+    "culture_title": "Notre Culture",
+    "culture_content": "",
+    "benefits_title": "Avantages",
+    "benefits_content": "",
+    "open_positions_title": "Postes Ouverts",
+    "open_positions_content": "",
+    "application_email": ""
+  }
+},
+{
+  "model": "contact.formfield",
+  "pk": 1,
+  "fields": {
+    "sort_order": 0,
+    "clean_name": "nom_et_prenom",
+    "label": "nom et prénom",
+    "field_type": "singleline",
+    "required": true,
+    "choices": "",
+    "default_value": "",
+    "help_text": "",
+    "page": 9
+  }
+},
+{
+  "model": "contact.formfield",
+  "pk": 2,
+  "fields": {
+    "sort_order": 1,
+    "clean_name": "telephone",
+    "label": "telephone",
+    "field_type": "number",
+    "required": true,
+    "choices": "",
+    "default_value": "",
+    "help_text": "",
+    "page": 9
+  }
+},
+{
+  "model": "contact.formfield",
+  "pk": 3,
+  "fields": {
+    "sort_order": 2,
+    "clean_name": "email",
+    "label": "email",
+    "field_type": "email",
+    "required": false,
+    "choices": "",
+    "default_value": "",
+    "help_text": "",
+    "page": 9
+  }
+},
+{
+  "model": "contact.formfield",
+  "pk": 4,
+  "fields": {
+    "sort_order": 3,
+    "clean_name": "adresse",
+    "label": "adresse",
+    "field_type": "singleline",
+    "required": false,
+    "choices": "",
+    "default_value": "",
+    "help_text": "",
+    "page": 9
+  }
+},
+{
+  "model": "contact.formfield",
+  "pk": 5,
+  "fields": {
+    "sort_order": 4,
+    "clean_name": "message",
+    "label": "message",
+    "field_type": "multiline",
+    "required": false,
+    "choices": "",
+    "default_value": "",
+    "help_text": "",
+    "page": 9
+  }
+},
+{
+  "model": "contact.contactpage",
+  "pk": 9,
+  "fields": {
+    "to_address": "",
+    "from_address": "",
+    "subject": "",
+    "hero_title": "Contactez-Nous",
+    "hero_subtitle": "",
+    "introduction": "",
+    "address": "",
+    "phone": "",
+    "email": "",
+    "office_hours": "",
+    "map_embed_code": "",
+    "thank_you_text": "",
+    "social_links": ""
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 1,
+  "fields": {
+    "sort_order": 0,
+    "link_page": 3,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Accueil",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 2,
+  "fields": {
+    "sort_order": 1,
+    "link_page": 4,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Qui sommes-nous ?",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 3,
+  "fields": {
+    "sort_order": 2,
+    "link_page": 5,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Nos expertises",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 4,
+  "fields": {
+    "sort_order": 3,
+    "link_page": 6,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Réalisations / Clients",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 5,
+  "fields": {
+    "sort_order": 4,
+    "link_page": 7,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Recrutement",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 6,
+  "fields": {
+    "sort_order": 5,
+    "link_page": 8,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Blog / Insights",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 7,
+  "fields": {
+    "sort_order": 6,
+    "link_page": 9,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Contact",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenuitem",
+  "pk": 8,
+  "fields": {
+    "sort_order": 7,
+    "link_page": 10,
+    "link_url": null,
+    "url_append": "",
+    "handle": "",
+    "link_text": "Mentions légales & RGPD",
+    "allow_subnav": true,
+    "menu": 2
+  }
+},
+{
+  "model": "wagtailmenus.mainmenu",
+  "pk": 2,
+  "fields": {
+    "site": 2,
+    "max_levels": 2
+  }
+}
+]
