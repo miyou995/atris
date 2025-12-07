@@ -1,7 +1,7 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-from wagtail.admin.panels import FieldPanel, StreamFieldPanel, MultiFieldPanel, InlinePanel, FieldRowPanel
+from wagtail.admin.panels import FieldPanel, StreamFieldPanel, MultiFieldPanel,FieldRowPanel
 from wagtail.fields import RichTextField, StreamField
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock

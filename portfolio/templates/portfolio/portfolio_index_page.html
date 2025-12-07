@@ -22,7 +22,7 @@
                     <div class="card">
                         {% if project.featured_image %}
                             {% image project.featured_image fill-400x300 as img %}
-                            <img src="{{ img.url }}" alt="{{ project.title }}" style="width: 100%; border-radius: var(--radius-lg); margin-bottom: var(--spacing-md);">
+                            <img src="{{ img.url }}" alt="{{ project.title }}" style="width: 20%; border-radius: var(--radius-lg); margin-bottom: var(--spacing-md);">
                         {% endif %}
                         <h3>{{ project.title }}</h3>
                         {% if project.summary %}<p>{{ project.summary }}</p>{% endif %}
@@ -31,12 +31,12 @@
                 {% endfor %}
             </div>
             
-            {% if page.client_logos.all %}
+            {% if page.client_opinion.all %}
             <div class="section-header">
                 <h2>{{ page.clients_title }}</h2>
             </div>
             <div class="grid grid-4">
-                {% for logo in page.client_logos.all %}
+                {% for logo in page.client_opinion.all %}
                     <div class="card text-center">
                         {% if logo.logo %}
                             {% image logo.logo max-200x100 as img %}

@@ -47,11 +47,42 @@ class AboutPage(Page):
 
     values_content = RichTextField(blank=True, verbose_name="Contenu des valeurs")
 
-    team_title = models.CharField(
-        max_length=255, default="Notre Équipe", verbose_name="Titre de l'équipe"
-    )
+    content = StreamField([
+        # History / Timeline
+        ('timeline', blocks.ListBlock(
+            blocks.StructBlock([
+                ('year', blocks.CharBlock(required=True,label="année")),
+                ('event', blocks.TextBlock(required=True,label='événement')),
+            ]),
+            label="histoire"
+        )),
+        # Key Numbers
+        ('key_numbers', blocks.ListBlock(
+            blocks.StructBlock([
+                ('number', blocks.CharBlock(required=True,label="nombre")),
+                ('label', blocks.CharBlock(required=True,label="label")),
+            ]),
+            label="chiffres clés"
+        )),
 
-    team_description = RichTextField(blank=True, verbose_name="Description de l'équipe")
+        # Leadership Team
+        ('leadership', blocks.ListBlock(
+            blocks.StructBlock([
+                ('photo', ImageChooserBlock(required=False,label="photo")),
+                ('name', blocks.CharBlock(required=True,label="nom")),
+                ('position', blocks.CharBlock(required=True,label="position")),
+                ('bio', blocks.TextBlock(required=True,label="bio")),
+            ]),
+            label="équipe dirigeante"
+        )),
+    ], blank=True, use_json_field=True)
+    content.verbose_name = "Le Contenu de la Page"
+
+    # team_title = models.CharField(
+    #     max_length=255, default="Notre Équipe", verbose_name="Titre de l'équipe"
+    # )
+
+    # team_description = RichTextField(blank=True, verbose_name="Description de l'équipe")
     # seo_title = models.CharField(max_length=255, blank=True)
     # seo_description = models.TextField(blank=True)
     content_panels = Page.content_panels + [
@@ -59,14 +90,13 @@ class AboutPage(Page):
         FieldPanel("hero_subtitle"),
         FieldPanel("hero_image"),
         FieldPanel("introduction"),
-        FieldPanel("mission_title"),
-        FieldPanel("mission_content"),
+        # FieldPanel("mission_title"),
+        # FieldPanel("mission_content"),
         FieldPanel("vision_title"),
         FieldPanel("vision_content"),
         FieldPanel("values_title"),
         FieldPanel("values_content"),
-        FieldPanel("team_title"),
-        FieldPanel("team_description"),
+        FieldPanel("content"),
         # MultiFieldPanel([FieldPanel('seo_title'), FieldPanel('seo_description')], heading="SEO"),
     ]
 
