@@ -1,9 +1,13 @@
 from django.db import models
 from modelcluster.fields import ParentalKey
 from wagtail.admin.panels import FieldPanel, InlinePanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable, Page
 from wagtail.search import index
+from wagtail import blocks
+from wagtail.images.blocks import ImageChooserBlock
+
+
 
 
 class PortfolioIndexPage(Page):
@@ -30,7 +34,7 @@ class PortfolioIndexPage(Page):
         FieldPanel("hero_subtitle"),
         FieldPanel("introduction"),
         FieldPanel("clients_title"),
-        InlinePanel("client_logos", label="Logos des clients"),
+        InlinePanel("client_opinion", label="les clients"),
     ]
 
     class Meta:
@@ -43,15 +47,14 @@ class PortfolioIndexPage(Page):
         return context
 
 
-class ClientLogo(Orderable):
+class ClientOpinion(Orderable):
     """Client logo for the portfolio index page"""
 
+
     page = ParentalKey(
-        PortfolioIndexPage, on_delete=models.CASCADE, related_name="client_logos"
+        PortfolioIndexPage, on_delete=models.CASCADE, related_name="client_opinion"
     )
-
-    client_name = models.CharField(max_length=255, verbose_name="Nom du client")
-
+    client_name = models.CharField(max_length=255, verbose_name="client")
     logo = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -60,10 +63,15 @@ class ClientLogo(Orderable):
         related_name="+",
         verbose_name="Logo",
     )
+    quote = RichTextField(blank=True,verbose_name="avis de client")
+    author =  models.CharField(blank=True ,verbose_name="Poste")
 
     panels = [
         FieldPanel("client_name"),
         FieldPanel("logo"),
+        FieldPanel("author"),
+        FieldPanel("quote"),
+
     ]
 
 
@@ -104,49 +112,49 @@ class PortfolioPage(Page):
 
     project_url = models.URLField(blank=True, verbose_name="URL du projet")
 
-    search_fields = Page.search_fields + [
-        index.SearchField("client_name"),
-        index.SearchField("summary"),
-        index.SearchField("challenge"),
-    ]
-    gallery_images = InlinePanel('gallery', label="Galerie")
+    body = StreamField([
+        ("text", blocks.RichTextBlock()),
+        ("image", ImageChooserBlock()),
+        ("list", blocks.ListBlock(blocks.CharBlock())),
+    ], use_json_field=True, blank=True)
+    body.verbose_name="les détails du projet"
+
+
 
     content_panels = Page.content_panels + [
         FieldPanel("client_name"),
         FieldPanel("project_date"),
         FieldPanel("featured_image"),
         FieldPanel("summary"),
-        FieldPanel("challenge"),
-        FieldPanel("solution"),
-        FieldPanel("results"),
         FieldPanel("technologies"),
         FieldPanel("project_url"),
-        InlinePanel("gallery_images", label="Galerie d'images"),
+        FieldPanel("body"),
+        # InlinePanel("gallery_images", label="Galerie d'images"),
     ]
 
     class Meta:
-        verbose_name = "Page Projet"
+        verbose_name = "Page cas d'étude"
 
     parent_page_types = ["portfolio.PortfolioIndexPage"]
 
 
-class PortfolioGalleryImage(Orderable):
-    """Gallery images for portfolio pages"""
+# class PortfolioGalleryImage(Orderable):
+#     """Gallery images for portfolio pages"""
 
-    page = ParentalKey(
-        PortfolioPage, on_delete=models.CASCADE, related_name="gallery_images"
-    )
+#     page = ParentalKey(
+#         PortfolioPage, on_delete=models.CASCADE, related_name="gallery_images"
+#     )
 
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        on_delete=models.CASCADE,
-        related_name="+",
-        verbose_name="Image",
-    )
+#     image = models.ForeignKey(
+#         "wagtailimages.Image",
+#         on_delete=models.CASCADE,
+#         related_name="+",
+#         verbose_name="Image",
+#     )
 
-    caption = models.CharField(max_length=255, blank=True, verbose_name="Légende")
+#     caption = models.CharField(max_length=255, blank=True, verbose_name="Légende")
 
-    panels = [
-        FieldPanel("image"),
-        FieldPanel("caption"),
-    ]
+#     panels = [
+#         FieldPanel("image"),
+#         FieldPanel("caption"),
+#     ]

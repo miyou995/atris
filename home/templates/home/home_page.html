@@ -3,7 +3,6 @@
 
 {% block content %}
 
-<link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
 
 <div class="overflow-x-hidden">
 
@@ -15,16 +14,16 @@
         {% endif %}
 
         <div data-aos="fade-up" class="z-10 max-w-2xl px-6">
-            <h1 class="text-4xl md:text-6xl font-bold mb-4">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white">
                 {{ page.hero_title }}
             </h1>
 
-            <p class="text-lg md:text-xl opacity-90 mb-6">
+            <p class="text-lg md:text-xl opacity-90 mb-6 text-white">
                 {{ page.hero_subtitle }}
             </p>
 
             {% if page.hero_cta_link %}
-                <a href="{{ page.hero_cta_link }}"
+                <a href="{{ page.cta_linked_page }}"
                    class="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg text-white font-semibold transition">
                     {{ page.hero_cta_text }}
                 </a>
@@ -67,7 +66,7 @@
         <h2 class="text-4xl font-bold mb-6" data-aos="fade-up">{{ page.cta_title }}</h2>
         <p data-aos="fade-up" class="max-w-xl mx-auto mb-6">{{ page.cta_description }}</p>
 
-        <a href="/contact"
+        <a href="{{ page.button_linked_page }}"
            class="px-8 py-4 bg-white text-blue-600 rounded-lg font-bold shadow hover:scale-105 transition"
            data-aos="zoom-in">
             {{ page.cta_button_text }}

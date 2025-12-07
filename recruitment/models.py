@@ -2,8 +2,68 @@ from django.db import models
 from wagtail.admin.panels import FieldPanel
 from wagtail.fields import RichTextField,StreamField
 from wagtail.models import Page
+from wagtail import blocks
 # from wagtail.admin.panels import StreamFieldPanel
 
+
+class EmployeeTestimonialBlock(blocks.StructBlock):
+    quote = blocks.TextBlock(label="Citation")
+    name = blocks.CharBlock(label="Nom")
+    role = blocks.CharBlock(label="Poste")
+    photo = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="photo",
+    )
+
+    class Meta:
+        icon = "user"
+        label = "Témoignage Collaborateur"
+
+
+# Contenu ambiance interne
+class CultureBlock(blocks.StreamBlock):
+    text = blocks.RichTextBlock(label="Texte")
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="image",
+    )
+    video = blocks.URLBlock(label="Vidéo (YouTube/Vimeo)", required=False)
+
+    class Meta:
+        icon = "pick"
+        label = "Ambiance / Culture interne"
+
+class RecruitmentIndexPage(Page):
+    introduction = RichTextField(blank=True)
+
+    culture = StreamField(
+        [("element", CultureBlock())],
+        use_json_field=True,
+        blank=True
+    )
+    # culture.verbose_name =
+
+    testimonials = StreamField(
+        [("testimonial", EmployeeTestimonialBlock())],
+        use_json_field=True,
+        blank=True
+    )
+
+    content_panels = Page.content_panels + [
+        FieldPanel("introduction"),
+        FieldPanel("culture"),
+        FieldPanel("testimonials"),
+    ]
+
+    subpage_types = ["RecruitmentPage"]
 
 
 class RecruitmentPage(Page):

@@ -1,9 +1,9 @@
 from django.db import models
 from wagtail.admin.panels import FieldPanel
-from wagtail.fields import RichTextField
+from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Page
-from wagtail.search import index
-
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail import blocks
 
 class ExpertiseIndexPage(Page):
     """Index page for 'Nos expertises' (Our Expertise)"""
@@ -18,11 +18,23 @@ class ExpertiseIndexPage(Page):
 
     introduction = RichTextField(blank=True, verbose_name="Introduction")
 
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Image d'en-tête",
+    )
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("introduction"),
+        FieldPanel("hero_image"),
+
     ]
+    subpage_type = ["ExpertisePage"]
+
 
     class Meta:
         verbose_name = "Page Index des Expertises"
@@ -36,14 +48,7 @@ class ExpertiseIndexPage(Page):
 
 class ExpertisePage(Page):
     """Individual expertise page"""
-
-    icon = models.CharField(
-        max_length=50,
-        blank=True,
-        help_text="Nom de l'icône (ex: 'code', 'design', 'analytics')",
-        verbose_name="Icône",
-    )
-
+    subtitle = models.CharField(max_length=255, blank=True)
     featured_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -52,38 +57,22 @@ class ExpertisePage(Page):
         related_name="+",
         verbose_name="Image principale",
     )
-
     summary = models.TextField(max_length=500, blank=True, verbose_name="Résumé")
 
     description = RichTextField(blank=True, verbose_name="Description détaillée")
+    body = StreamField([
+        ("section", blocks.RichTextBlock()),
+        ("image", ImageChooserBlock(required=False)),
+        ("list", blocks.ListBlock(blocks.CharBlock(label="Point"))),
+    ], use_json_field=True, blank=True)
+    body.verbose_name="Le Contenu de la Page"
 
-    key_points = RichTextField(
-        blank=True,
-        verbose_name="Points clés",
-        help_text="Liste des points clés de cette expertise",
-    )
-
-    technologies = models.CharField(
-        max_length=500,
-        blank=True,
-        verbose_name="Technologies utilisées",
-        help_text="Séparées par des virgules",
-    )
-
-    search_fields = Page.search_fields + [
-        index.SearchField("summary"),
-        index.SearchField("description"),
-    ]
-    tags = models.CharField(max_length=255, blank=True, help_text="Comma-separated tags")
 
     content_panels = Page.content_panels + [
-        FieldPanel("icon"),
         FieldPanel("featured_image"),
         FieldPanel("summary"),
         FieldPanel("description"),
-        FieldPanel("key_points"),
-        FieldPanel("technologies"),
-        FieldPanel("tags")
+        FieldPanel("body"),
     ]
 
     class Meta:

@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags %}
+{% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
     <section class="hero">
@@ -20,8 +20,9 @@
             <div class="grid grid-3">
                 {% for expertise in expertises %}
                     <div class="card">
-                        {% if expertise.icon %}
-                            <div class="card-icon">{{ expertise.icon }}</div>
+                        {% if expertise.featured_image %}
+                            {% image expertise.featured_image fill-400x300 as img %}
+                            <img src="{{ img.url }}" alt="{{ expertise.title }}"  >
                         {% endif %}
                         <h3>{{ expertise.title }}</h3>
                         {% if expertise.summary %}<p>{{ expertise.summary }}</p>{% endif %}

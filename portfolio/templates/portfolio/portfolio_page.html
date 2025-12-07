@@ -1,55 +1,143 @@
 {% extends "base.html" %}
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailimages_tags wagtailcore_tags %}
 
 {% block content %}
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>{{ page.title }}</h1>
-                {% if page.client_name %}<p>Client: {{ page.client_name }}</p>{% endif %}
-            </div>
-        </div>
-    </section>
 
-    <section class="section">
-        <div class="container container-narrow">
-            {% if page.summary %}
-                <p class="mb-xl" style="font-size: 1.25rem; color: var(--text-secondary);">{{ page.summary }}</p>
-            {% endif %}
-            
-            {% if page.challenge %}
-                <div class="card mb-lg">
-                    <h3>Défi</h3>
-                    {{ page.challenge|richtext }}
-                </div>
-            {% endif %}
-            
-            {% if page.solution %}
-                <div class="card mb-lg">
-                    <h3>Solution</h3>
-                    {{ page.solution|richtext }}
-                </div>
-            {% endif %}
-            
-            {% if page.results %}
-                <div class="card mb-lg">
-                    <h3>Résultats</h3>
-                    {{ page.results|richtext }}
-                </div>
-            {% endif %}
-            
-            {% if page.gallery_images.all %}
-                <h3 class="mt-xl mb-md">Galerie</h3>
-                <div class="grid grid-2">
-                    {% for item in page.gallery_images.all %}
-                        <div>
-                            {% image item.image fill-600x400 as img %}
-                            <img src="{{ img.url }}" alt="{{ item.caption }}" style="width: 100%; border-radius: var(--radius-lg);">
-                            {% if item.caption %}<p class="mt-sm">{{ item.caption }}</p>{% endif %}
-                        </div>
+<!-- HERO SECTION -->
+<section class="relative h-80 md:h-96 overflow-hidden bg-gray-900 text-white">
+    {% if page.featured_image %}
+        {% image page.featured_image original as hero %}
+        <img src="{{ hero.url }}" 
+             class="absolute inset-0 w-full h-full object-cover opacity-40">
+    {% endif %}
+
+    <div class="relative z-10 container h-full flex flex-col justify-center">
+        <h1 class="text-4xl md:text-5xl font-bold mb-3">{{ page.title }}</h1>
+
+        {% if page.client_name %}
+            <p class="text-lg text-gray-200">Client : {{ page.client_name }}</p>
+        {% endif %}
+
+        {% if page.project_date %}
+            <p class="mt-1 text-gray-300 text-sm">
+                Projet réalisé le : {{ page.project_date }}
+            </p>
+        {% endif %}
+    </div>
+</section>
+
+
+<!-- CONTENT -->
+<section class="py-16">
+    <div class="container max-w-3xl">
+
+        <!-- SUMMARY -->
+        {% if page.summary %}
+            <p class="text-xl text-gray-600 mb-12 leading-relaxed">
+                {{ page.summary }}
+            </p>
+        {% endif %}
+
+        <!-- TECH LIST -->
+        {% if page.technologies %}
+            <div class="mb-10">
+                <h3 class="text-xl font-semibold mb-4">Technologies utilisées</h3>
+                <div class="flex flex-wrap gap-2">
+                    {% for tech in page.technologies %}
+                        <span class="px-4 py-1 bg-gray-100 rounded-full text-sm text-gray-700 border">
+                            {{ tech }}
+                        </span>
                     {% endfor %}
                 </div>
-            {% endif %}
-        </div>
-    </section>
+            </div>
+        {% endif %}
+
+        <!-- PROJECT URL -->
+        {% if page.project_url %}
+            <div class="mb-12">
+                <a href="{{ page.project_url }}"
+                   target="_blank"
+                   class="inline-block bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg shadow transition">
+                    Voir le projet →
+                </a>
+            </div>
+        {% endif %}
+
+        <!-- CHALLENGE -->
+        {% if page.challenge %}
+            <div class="card p-6 rounded-xl shadow mb-10 bg-white">
+                <h3 class="text-2xl font-semibold mb-4">Défi</h3>
+                <div class="prose">{{ page.challenge|richtext }}</div>
+            </div>
+        {% endif %}
+
+        <!-- SOLUTION -->
+        {% if page.solution %}
+            <div class="card p-6 rounded-xl shadow mb-10 bg-white">
+                <h3 class="text-2xl font-semibold mb-4">Solution apportée</h3>
+                <div class="prose">{{ page.solution|richtext }}</div>
+            </div>
+        {% endif %}
+
+        <!-- RESULTS -->
+        {% if page.results %}
+            <div class="card p-6 rounded-xl shadow mb-10 bg-white">
+                <h3 class="text-2xl font-semibold mb-4">Résultats</h3>
+                <div class="prose">{{ page.results|richtext }}</div>
+            </div>
+        {% endif %}
+
+        <!-- STREAMFIELD BODY -->
+        {% if page.body %}
+            <div class="space-y-12">
+
+                {% for block in page.body %}
+
+                    {% if block.block_type == "text" %}
+                        <div class="prose prose-lg">
+                            {{ block.value|richtext }}
+                        </div>
+
+                    {% elif block.block_type == "image" %}
+                        <div class="rounded-xl overflow-hidden shadow-md">
+                            {% image block.value original as img %}
+                            <img src="{{ img.url }}" class="w-full h-auto">
+                        </div>
+
+                    {% elif block.block_type == "list" %}
+                        <div class="card p-6 rounded-xl shadow-md bg-white">
+                            <h3 class="text-xl font-semibold mb-4">Points clés</h3>
+                            <ul class="list-disc ml-6 space-y-2">
+                                {% for item in block.value %}
+                                    <li>{{ item }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+
+                    {% endif %}
+
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <!-- GALLERY -->
+        {% comment %} {% if page.gallery_images.all %}
+            <h3 class="text-2xl font-semibold mt-16 mb-6">Galerie</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {% for item in page.gallery_images.all %}
+                    <div class="rounded-xl overflow-hidden shadow">
+                        {% image item.image fill-600x400 as img %}
+                        <img src="{{ img.url }}" class="w-full h-full object-cover">
+                        {% if item.caption %}
+                            <p class="text-sm text-gray-600 mt-2">{{ item.caption }}</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %} {% endcomment %}
+
+    </div>
+</section>
+
 {% endblock %}
