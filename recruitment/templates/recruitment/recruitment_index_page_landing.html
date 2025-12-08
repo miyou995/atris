@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block content %}
+<section class="py-5 text-center">
+    <div class="container">
+        <h1 class="display-5">Merci pour votre candidature</h1>
+        <p class="lead mt-3">
+            Votre candidature a bien été envoyée.  
+            Notre équipe vous contactera si votre profil correspond.
+        </p>
+
+        <a href="{{ page.url }}" class="btn btn-primary mt-4">Retour</a>
+    </div>
+</section>
+{% endblock %}

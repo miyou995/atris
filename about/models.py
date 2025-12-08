@@ -99,6 +99,9 @@ class AboutPage(Page):
         FieldPanel("content"),
         # MultiFieldPanel([FieldPanel('seo_title'), FieldPanel('seo_description')], heading="SEO"),
     ]
-
+    
     class Meta:
         verbose_name = "Page À Propos"
+
+    # parent_page_types = ['myapp.HomePage'] 
+    subpage_types = []

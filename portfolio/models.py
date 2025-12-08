@@ -39,6 +39,7 @@ class PortfolioIndexPage(Page):
 
     class Meta:
         verbose_name = "Page Index du Portfolio"
+    subpage_types = ["PortfolioPage"]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -136,6 +137,7 @@ class PortfolioPage(Page):
         verbose_name = "Page cas d'étude"
 
     parent_page_types = ["portfolio.PortfolioIndexPage"]
+    subpage_types = []
 
 
 # class PortfolioGalleryImage(Orderable):

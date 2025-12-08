@@ -64,6 +64,13 @@ class HomePage(Page):
         FieldPanel("button_linked_page"),
         
     ]
+    
+    @classmethod
+    def can_create_at(cls, parent):
+        # Only one HomePage allowed, under the root page (wagtailcore.Page)
+        return super().can_create_at(parent) and not cls.objects.exists()
 
     class Meta:
         verbose_name = "Page d'Accueil"
+
+    
