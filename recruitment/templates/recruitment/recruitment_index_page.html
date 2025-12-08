@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block content %}
+
+<!-- =============================== -->
+<!-- HERO SECTION -->
+<!-- =============================== -->
+<section class="hero py-10 text-center">
+    <div class="container">
+        <h1>{{ page.hero_title }}</h1>
+
+        {% if page.hero_image %}
+            {% image page.hero_image fill-1600x500 as hero %}
+            <img src="{{ hero.url }}" alt="{{ hero.alt }}" class="img-fluid mt-4">
+        {% endif %}
+
+        <div class="intro mt-4">
+            {{ page.introduction|richtext }}
+        </div>
+    </div>
+</section>
+
+<hr>
+
+
+<!-- =============================== -->
+<!-- CONTRACT TYPE FILTERS -->
+<!-- =============================== -->
+<section class="filters py-5">
+    <div class="container">
+        <h2>Filtrer par type de contrat</h2>
+
+        {% if page.contract_types.all %}
+            <ul class="contract-filters d-flex gap-3 mt-3">
+                {% for ct in page.contract_types.all %}
+                    <li>
+                        <a href="?type={{ ct.id }}" 
+                           class="badge bg-primary text-white p-2">
+                            {{ ct.name }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</section>
+
+
+<!-- =============================== -->
+<!-- JOB LISTING -->
+<!-- =============================== -->
+<section class="job-list py-5">
+    <div class="container">
+        <h2 class="mb-4">Offres d’emploi</h2>
+
+        {% if jobs %}
+            <div class="job-cards row gy-4">
+                {% for job in jobs %}
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm">
+                        <h3>{{ job.job_title }}</h3>
+
+                        {% if job.contract_type %}
+                            <span class="badge bg-secondary">
+                                {{ job.contract_type.name }}
+                            </span>
+                        {% endif %}
+
+                        {% if job.location %}
+                            <p><strong>Lieu :</strong> {{ job.location }}</p>
+                        {% endif %}
+
+                        <div>
+                            {{ job.introduction|richtext }}
+                        </div>
+
+                        <a href="{{ job.url }}" class="btn btn-primary mt-3">
+                            Voir l'offre →
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>Aucune offre disponible pour le moment.</p>
+        {% endif %}
+    </div>
+</section>
+
+
+<hr>
+
+
+<!-- =============================== -->
+<!-- CULTURE / INTERNAL AMBIANCE -->
+<!-- =============================== -->
+<section class="culture py-5">
+    <div class="container">
+        <h2 class="mb-4">Ambiance & Culture interne</h2>
+
+        {% for block in page.culture %}
+            <div class="culture-block mb-5">
+                {% if block.value.text %}
+                    <div class="mb-3">
+                        {{ block.value.text|richtext }}
+                    </div>
+                {% endif %}
+
+                {% if block.value.image %}
+                    {% image block.value.image fill-800x400 as img %}
+                    <img src="{{ img.url }}" class="img-fluid mb-3" alt="">
+                {% endif %}
+
+                {% if block.value.video %}
+                    <div class="ratio ratio-16x9 mb-3">
+                        <iframe src="{{ block.value.video }}" frameborder="0" allowfullscreen></iframe>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<hr>
+
+
+<!-- =============================== -->
+<!-- TESTIMONIALS -->
+<!-- =============================== -->
+<section class="testimonials py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4">Témoignages de nos collaborateurs</h2>
+
+        <div class="row gy-4">
+
+            {% for block in page.testimonials %}
+                {% with t=block.value %}
+                <div class="col-md-4">
+                    <div class="card p-4 shadow-sm h-100">
+
+                        {% if t.photo %}
+                            {% image t.photo fill-200x200 as img %}
+                            <img src="{{ img.url }}" class="rounded-circle mb-3" alt="">
+                        {% endif %}
+
+                        <h4>{{ t.name }}</h4>
+                        <p class="text-muted">{{ t.role }}</p>
+
+                        <blockquote class="fst-italic">
+                            "{{ t.quote }}"
+                        </blockquote>
+
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+
+        </div>
+    </div>
+</section>
+
+{% endblock %}

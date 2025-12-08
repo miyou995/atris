@@ -2,48 +2,71 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>{{ page.hero_title }}</h1>
-                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
-            </div>
-        </div>
-    </section>
 
-    <section class="section">
-        <div class="container container-narrow">
-            {% if page.introduction %}
-                <div class="mb-xl">{{ page.introduction|richtext }}</div>
-            {% endif %}
-            
-            <div class="grid grid-2 mb-xl">
-                <div class="card">
-                    <h3>{{ page.why_join_title }}</h3>
-                    {{ page.why_join_content|richtext }}
-                </div>
-                <div class="card">
-                    <h3>{{ page.culture_title }}</h3>
-                    {{ page.culture_content|richtext }}
-                </div>
+<div class="container py-5">
+
+    <!-- JOB HEADER -->
+    <h1 class="mb-3">{{ page.job_title }}</h1>
+
+    <p class="text-muted">
+        {% if page.contract_type %}
+            <strong>Type de contrat :</strong> {{ page.contract_type.name }} &nbsp;•&nbsp;
+        {% endif %}
+        {% if page.location %}
+            <strong>Localisation :</strong> {{ page.location }}
+        {% endif %}
+    </p>
+
+    <!-- INTRODUCTION -->
+    {% if page.introduction %}
+        <div class="mb-4">
+            {{ page.introduction|richtext }}
+        </div>
+    {% endif %}
+
+    <!-- DESCRIPTION -->
+    {% if page.description %}
+        <div class="job-description mb-5">
+            {{ page.description }}
+        </div>
+    {% endif %}
+
+    <hr class="my-5">
+
+    <!-- APPLICATION FORM -->
+    <h2 class="mb-4">Postuler pour ce poste</h2>
+{% if success %}
+<div class="alert alert-success">Votre candidature a été envoyée avec succès.</div>
+{% endif %}
+    <form action="{% pageurl page.get_parent %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
             </div>
-            
-            {% if page.benefits_content %}
-            <div class="card mb-xl">
-                <h3>{{ page.benefits_title }}</h3>
-                {{ page.benefits_content|richtext }}
-            </div>
-            {% endif %}
-            
-            {% if page.open_positions_content %}
-            <div class="card">
-                <h3>{{ page.open_positions_title }}</h3>
-                {{ page.open_positions_content|richtext }}
-                {% if page.application_email %}
-                    <p class="mt-md"><strong>Candidatures:</strong> <a href="mailto:{{ page.application_email }}">{{ page.application_email }}</a></p>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label"><strong>{{ field.label }}</strong></label>
+                {{ field }}
+
+                {% if field.help_text %}
+                    <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+
+                {% if field.errors %}
+                    <div class="text-danger small">{{ field.errors }}</div>
                 {% endif %}
             </div>
-            {% endif %}
-        </div>
-    </section>
+        {% endfor %}
+
+        <button class="btn btn-primary mt-3" type="submit">
+            Envoyer ma candidature
+        </button>
+    </form>
+
+</div>
+
 {% endblock %}

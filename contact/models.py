@@ -39,26 +39,29 @@ class ContactPage(AbstractEmailForm):
         max_length=255, blank=True, verbose_name="Horaires d'ouverture"
     )
 
+
     # Map
     map_embed_code = models.TextField(
         blank=True,
         verbose_name="Code d'intégration de la carte",
         help_text="Code iframe de Google Maps ou autre service de cartographie",
     )
+    # --- Réseaux sociaux ---
+    facebook_url = models.URLField("Facebook", blank=True)
+    instagram_url = models.URLField("Instagram", blank=True)
+    linkedin_url = models.URLField("LinkedIn", blank=True)
+    youtube_url = models.URLField("YouTube", blank=True)
 
-    # Form settings
-    thank_you_text = RichTextField(
-        blank=True,
-        verbose_name="Message de remerciement",
-        help_text="Texte affiché après la soumission du formulaire",
-    )
-    social_links = models.TextField(blank=True, help_text='Liste de liens réseaux sociaux séparés par virgule')
 
     content_panels = AbstractEmailForm.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("introduction"),
         FieldPanel("address"),
+        FieldPanel("facebook_url"),
+        FieldPanel("instagram_url"),
+        FieldPanel("youtube_url"),
+
         FieldRowPanel(
             [
                 FieldPanel("phone"),
@@ -66,12 +69,14 @@ class ContactPage(AbstractEmailForm):
             ]
         ),
         FieldPanel("office_hours"),
-        FieldPanel("social_links"),
         FieldPanel("map_embed_code"),
         InlinePanel("form_fields", label="Champs du formulaire"),
-        FieldPanel("thank_you_text"),
         FormSubmissionsPanel(),
     ]
 
     class Meta:
         verbose_name = "Page Contact"
+
+    subpage_types = []
+
+    

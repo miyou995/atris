@@ -33,7 +33,7 @@ class ExpertiseIndexPage(Page):
         FieldPanel("hero_image"),
 
     ]
-    subpage_type = ["ExpertisePage"]
+    subpage_types = ["ExpertisePage"]
 
 
     class Meta:
@@ -79,3 +79,4 @@ class ExpertisePage(Page):
         verbose_name = "Page Expertise"
 
     parent_page_types = ["expertise.ExpertiseIndexPage"]
+    subpage_types = []

@@ -1,23 +1,36 @@
 from django.db import models
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.fields import RichTextField,StreamField
 from wagtail.models import Page
 from wagtail import blocks
+from modelcluster.fields import ParentalKey
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.contrib.forms.models import AbstractFormField,AbstractEmailForm
+from wagtail.contrib.forms.models import AbstractFormSubmission
+from django.shortcuts import redirect, render
+
 # from wagtail.admin.panels import StreamFieldPanel
 
 
-class EmployeeTestimonialBlock(blocks.StructBlock):
-    quote = blocks.TextBlock(label="Citation")
+class ContractType(models.Model):
+    page = ParentalKey(
+        "recruitment.RecruitmentIndexPage",
+        related_name="contract_types",
+        on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=100, verbose_name="Type de contrat")
+    panels = [
+        FieldPanel("name"),
+    ]
+    def __str__(self):
+        return self.name
+
+
+class TestimonialCollaboratorBlock(blocks.StructBlock):
     name = blocks.CharBlock(label="Nom")
     role = blocks.CharBlock(label="Poste")
-    photo = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="photo",
-    )
+    quote = blocks.TextBlock(label="Citation")
+    photo = ImageChooserBlock(label="Photo", required=False)
 
     class Meta:
         icon = "user"
@@ -27,56 +40,36 @@ class EmployeeTestimonialBlock(blocks.StructBlock):
 # Contenu ambiance interne
 class CultureBlock(blocks.StreamBlock):
     text = blocks.RichTextBlock(label="Texte")
-    image = models.ForeignKey(
-        "wagtailimages.Image",
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name="+",
-        verbose_name="image",
-    )
+    image = ImageChooserBlock(label="Image",required=False)
     video = blocks.URLBlock(label="Vidéo (YouTube/Vimeo)", required=False)
 
     class Meta:
         icon = "pick"
         label = "Ambiance / Culture interne"
 
-class RecruitmentIndexPage(Page):
-    introduction = RichTextField(blank=True)
 
-    culture = StreamField(
-        [("element", CultureBlock())],
-        use_json_field=True,
-        blank=True
-    )
-    # culture.verbose_name =
-
-    testimonials = StreamField(
-        [("testimonial", EmployeeTestimonialBlock())],
-        use_json_field=True,
-        blank=True
+class JobApplicationFormField(AbstractFormField):
+    page = ParentalKey(
+        'recruitment.RecruitmentIndexPage',
+        related_name='form_fields',
+        on_delete=models.CASCADE
     )
 
-    content_panels = Page.content_panels + [
-        FieldPanel("introduction"),
-        FieldPanel("culture"),
-        FieldPanel("testimonials"),
-    ]
+class JobApplicationSubmission(AbstractFormSubmission):
+    page = models.ForeignKey(
+        'recruitment.RecruitmentIndexPage',
+        on_delete=models.CASCADE,
+        related_name='submissions'
+    )
 
-    subpage_types = ["RecruitmentPage"]
 
+class RecruitmentIndexPage(AbstractEmailForm):
+    submission_class = JobApplicationSubmission
 
-class RecruitmentPage(Page):
-    """Page model for 'Recrutement' (Recruitment)"""
 
     hero_title = models.CharField(
         max_length=255, default="Rejoignez Notre Équipe", verbose_name="Titre principal"
     )
-
-    hero_subtitle = models.CharField(
-        max_length=500, blank=True, verbose_name="Sous-titre"
-    )
-
     hero_image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -85,65 +78,105 @@ class RecruitmentPage(Page):
         related_name="+",
         verbose_name="Image d'en-tête",
     )
+    introduction = RichTextField(blank=True)
 
-    introduction = RichTextField(blank=True, verbose_name="Introduction")
-
-    why_join_title = models.CharField(
-        max_length=255,
-        default="Pourquoi nous rejoindre ?",
-        verbose_name="Titre 'Pourquoi nous rejoindre'",
-    )
-
-    why_join_content = RichTextField(
-        blank=True, verbose_name="Contenu 'Pourquoi nous rejoindre'"
-    )
-
-    culture_title = models.CharField(
-        max_length=255, default="Notre Culture", verbose_name="Titre de la culture"
-    )
-
-    culture_content = RichTextField(blank=True, verbose_name="Contenu de la culture")
-
-    benefits_title = models.CharField(
-        max_length=255, default="Avantages", verbose_name="Titre des avantages"
-    )
-
-    benefits_content = RichTextField(blank=True, verbose_name="Contenu des avantages")
-
-    open_positions_title = models.CharField(
-        max_length=255,
-        default="Postes Ouverts",
-        verbose_name="Titre des postes ouverts",
-    )
-
-    open_positions_content = RichTextField(
+    culture = StreamField(
+        [("element", CultureBlock())],
+        use_json_field=True,
         blank=True,
-        verbose_name="Contenu des postes ouverts",
-        help_text="Listez les postes actuellement ouverts",
+        verbose_name="Ambiance / Culture interne"
     )
-
-    application_email = models.EmailField(
+    testimonials = StreamField(
+        [("testimonial", TestimonialCollaboratorBlock())],
+        use_json_field=True,
         blank=True,
-        verbose_name="Email de candidature",
-        help_text="Email pour recevoir les candidatures",
+        verbose_name="Témoignages collaborateurs"
     )
-    # testimonials = StreamField([('testimonial', TestimonialBlock())], blank=True)
+    
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
-        FieldPanel("hero_subtitle"),
         FieldPanel("hero_image"),
         FieldPanel("introduction"),
-        FieldPanel("why_join_title"),
-        FieldPanel("why_join_content"),
-        FieldPanel("culture_title"),
-        FieldPanel("culture_content"),
-        FieldPanel("benefits_title"),
-        FieldPanel("benefits_content"),
-        FieldPanel("open_positions_title"),
-        FieldPanel("open_positions_content"),
-        FieldPanel("application_email"),
-        # StreamFieldPanel('testimonials'),
-        ]
+        InlinePanel("contract_types", label="Types de contrat"),
+        InlinePanel("form_fields", label="Application Fields"),  
+        FieldPanel("culture"),
+        FieldPanel("testimonials"),
+        # InlinePanel("contract_type", label="Types de contrat"),
+    ]
+    subpage_types = ["RecruitmentPage"]
 
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        jobs = self.get_children().live().specific()
+
+        contract_type_id = request.GET.get("type")
+        if contract_type_id:
+            jobs = [
+                job for job in jobs
+                if job.contract_type and str(job.contract_type.id) == contract_type_id
+            ]
+        context["jobs"] = jobs
+        context["selected_contract_type"] = contract_type_id
+
+    
+        return context
+    def serve(self, request):
+        if request.method == 'POST':
+            form = self.get_form(request.POST, request.FILES)
+            if form.is_valid():
+                self.process_form_submission(form)
+                return redirect(self.url)  
+
+
+        return super().serve(request)
+
+
+
+class RecruitmentPage(Page):
+    contract_type = models.ForeignKey(
+        ContractType,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="recruitment_pages",
+        verbose_name="Type de contrat",
+    )
+    job_title = models.CharField(max_length=255,verbose_name="Poste")
+    location = models.CharField(max_length=255, blank=True,verbose_name="Localisation")
+    introduction = RichTextField(blank=True, verbose_name="Introduction")
+
+
+    description = StreamField([
+        ('content', blocks.StreamBlock([
+            ("text", blocks.RichTextBlock()),
+            ("list", blocks.ListBlock(blocks.CharBlock(), label="Liste")),
+        ])),
+       
+    ], use_json_field=True, blank=True)
+
+    content_panels = Page.content_panels + [
+        FieldPanel("contract_type"),
+        FieldPanel("job_title"),
+        FieldPanel("introduction"),
+        FieldPanel("location"),
+        FieldPanel("description"),
+        ]
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+
+        parent = self.get_parent().specific
+        form = parent.get_form(request.POST or None, request.FILES or None)
+
+        context["form"] = form
+
+        if request.method == "POST" and form.is_valid():
+            context["success"] = True
+
+        return context
+    
     class Meta:
         verbose_name = "Page Recrutement"
+
+
+    parent_page_types = ["recruitment.RecruitmentIndexPage"]
+    subpage_types = []
