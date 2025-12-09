@@ -73,4 +73,6 @@ class HomePage(Page):
     class Meta:
         verbose_name = "Page d'Accueil"
 
+
+    # subpage_types = []
     

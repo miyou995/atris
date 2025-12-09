@@ -1,0 +1,19 @@
+{% load menu_tags %}
+
+<nav id="mobile-menu" class="mainmenu">
+  <ul>
+    {% for item in menu_items %}
+      <li class="
+          {% if item.has_children_in_menu %}has-dropdown{% endif %}
+          {{ item.active_class }}
+        ">
+        
+        <a href="{{ item.href }}">{{ item.text }}</a>
+
+        {% if item.has_children_in_menu %}
+          {% sub_menu item template="menus/dexon/sub_menu.html" %}
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>
