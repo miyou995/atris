@@ -79,7 +79,7 @@ class BlogIndexPage(Page):
     subpage_types = ["BlogPage"]
     # parent_page_types = ['wagtailcore.Page']
 
-
+#addeded vcomment 
 
 class BlogPage(Page):
     subtitle = models.CharField(max_length=250, blank=True)
