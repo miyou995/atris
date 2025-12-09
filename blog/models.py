@@ -1,11 +1,47 @@
 from django.db import models
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel,InlinePanel
 from wagtail.fields import RichTextField,StreamField
 from wagtail.models import Page
 from wagtail import blocks
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel,MultiFieldPanel
 from wagtail.images.blocks import ImageChooserBlock
 # from wagtail.admin.panels import StreamFieldPanel
+from wagtail.snippets.models import register_snippet
+from django.forms import CheckboxSelectMultiple
+from modelcluster.fields import ParentalKey
+
+
+
+# @register_snippet
+class BlogCategory(models.Model):
+    page = ParentalKey(
+        "blog.BlogIndexPage",
+        related_name="categories",
+        on_delete=models.CASCADE
+    )
+    name = models.CharField(max_length=100, verbose_name="Catégorie")
+    slug = models.SlugField(unique=True)
+
+    panels = [
+        FieldPanel("name"),
+        FieldPanel("slug"),
+    ]
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Catégorie"
+        verbose_name_plural = "Catégories"
+
+
+class ArticleType(models.TextChoices):
+    TECH = "tech", "Tech"
+    ACTUALITES = "actualites", "Actualités"
+    INTERNES = "internes", "Interne"
+    CULTURE = "culture", "Culture d’entreprise"
+
+
 
 class BlogIndexPage(Page):
     """Index page for Blog / Insights"""
@@ -24,10 +60,15 @@ class BlogIndexPage(Page):
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("intro"),
+        InlinePanel("categories", label="Catégories"),
+        
+
     ]
 
     class Meta:
         verbose_name = "Page Index du Blog"
+
+    # subpage_types = ["blog.ArticlePage"]
 
     def get_context(self, request):
         context = super().get_context(request)
@@ -38,26 +79,52 @@ class BlogIndexPage(Page):
 
 
 class BlogPage(Page):
+    subtitle = models.CharField(max_length=250, blank=True)
+    type = models.CharField(
+        max_length=50,
+        choices=ArticleType.choices,
+        default=ArticleType.TECH,
+        verbose_name="Type d’article",
+    )
+    categories = models.ManyToManyField(
+        "blog.BlogCategory",
+        related_name="articles",
+        blank=True,
+        verbose_name="Catégories"
+    )
+    image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Image de couverture"
+    )
     date = models.DateField('Date')
     author = models.CharField(max_length=255, blank=True,verbose_name="auteur")
-    categories = models.CharField(max_length=255, blank=True, help_text='Comma separated categories')
-    excerpt = models.TextField(blank=True)
-    body = StreamField([
-        ('heading', blocks.CharBlock(form_classname="title")),
-        ('content', blocks.RichTextBlock()),
-        ('image', ImageChooserBlock()),
-    ])
-    
-    # def get_context(self,request):
-    #     context = super().get_context(request)
-    #     # Get all child blog pages
-    #     context["blogs"] = self.get_children().live()
-    #     return context
+   
+    body = StreamField(
+        [
+            ("paragraph", blocks.RichTextBlock()),
+            ("image", ImageChooserBlock()),
+            ("quote", blocks.BlockQuoteBlock()),
+        ],
+        use_json_field=True,
+        blank=True,
+    )
 
     content_panels = Page.content_panels + [
-    FieldPanel('date'),
-    FieldPanel('author'),
-    FieldPanel('categories'),
-    FieldPanel('excerpt'),
-    FieldPanel('body'),
+        MultiFieldPanel(
+            [
+                FieldPanel("subtitle"),
+                FieldPanel("type"),
+                FieldPanel("categories", widget=CheckboxSelectMultiple),
+                FieldPanel("date"),
+                FieldPanel("image"),
+            ],
+            heading="Informations",
+        ),
+        FieldPanel("body"),
     ]
+
+    parent_page_types = ["blog.BlogIndexPage"]
