@@ -11,7 +11,7 @@ from django.forms import CheckboxSelectMultiple
 from modelcluster.fields import ParentalKey
 
 
-
+#### this is the blog
 # @register_snippet
 class BlogCategory(models.Model):
     page = ParentalKey(
