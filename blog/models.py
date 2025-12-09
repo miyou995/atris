@@ -75,6 +75,9 @@ class BlogIndexPage(Page):
         # Get all child blog pages
         context["posts"] = self.get_children().live().order_by("-first_published_at")
         return context
+    
+    subpage_types = ["BlogPage"]
+    # parent_page_types = ['wagtailcore.Page']
 
 
 
@@ -128,3 +131,4 @@ class BlogPage(Page):
     ]
 
     parent_page_types = ["blog.BlogIndexPage"]
+    subpage_types = []
