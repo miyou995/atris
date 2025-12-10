@@ -24,6 +24,7 @@ class HomePage(Page):
         related_name="+",
         verbose_name="Image d'en-tête",
     )
+    video = models.URLField(blank=True, verbose_name="Vidéo (YouTube/Vimeo)")
 
     hero_cta_text = models.CharField(
         max_length=50, default="En savoir plus", verbose_name="Texte du bouton CTA"
@@ -38,7 +39,8 @@ class HomePage(Page):
             related_name='+', # Use '+' to avoid reverse accessor clashes
         )
 
-    introduction = RichTextField(blank=True, verbose_name="Introduction")
+    introduction = RichTextField(blank=True, verbose_name="Introduction",
+                                 )
 
     cta_button_text = models.CharField(
         max_length=50,
@@ -57,6 +59,7 @@ class HomePage(Page):
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("hero_image"),
+        FieldPanel("video"),
         FieldPanel("introduction"),
         FieldPanel("hero_cta_text"),
         FieldPanel("cta_linked_page"),

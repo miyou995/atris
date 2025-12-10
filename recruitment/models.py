@@ -38,7 +38,7 @@ class TestimonialCollaboratorBlock(blocks.StructBlock):
 
 
 # Contenu ambiance interne
-class CultureBlock(blocks.StreamBlock):
+class CultureBlock(blocks.StructBlock):
     text = blocks.RichTextBlock(label="Texte")
     image = ImageChooserBlock(label="Image",required=False)
     video = blocks.URLBlock(label="Vidéo (YouTube/Vimeo)", required=False)
@@ -143,23 +143,25 @@ class RecruitmentPage(Page):
     )
     job_title = models.CharField(max_length=255,verbose_name="Poste")
     location = models.CharField(max_length=255, blank=True,verbose_name="Localisation")
-    introduction = RichTextField(blank=True, verbose_name="Introduction")
+    body = RichTextField(blank=True, verbose_name="Description")
+    salary = models.CharField(max_length=255, blank=True,verbose_name="Salaire")
 
 
-    description = StreamField([
-        ('content', blocks.StreamBlock([
-            ("text", blocks.RichTextBlock()),
-            ("list", blocks.ListBlock(blocks.CharBlock(), label="Liste")),
-        ])),
+    # description = StreamField([
+    #     ('content', blocks.StreamBlock([
+    #         ("text", blocks.RichTextBlock()),
+    #         ("list", blocks.ListBlock(blocks.CharBlock(), label="Liste")),
+    #     ])),
        
-    ], use_json_field=True, blank=True)
+    # ], use_json_field=True, blank=True)
 
     content_panels = Page.content_panels + [
         FieldPanel("contract_type"),
         FieldPanel("job_title"),
-        FieldPanel("introduction"),
+        # FieldPanel("introduction"),
         FieldPanel("location"),
-        FieldPanel("description"),
+        FieldPanel("body"),
+        FieldPanel("salary"),
         ]
     def get_context(self, request, *args, **kwargs):
         context = super().get_context(request, *args, **kwargs)

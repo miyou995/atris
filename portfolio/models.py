@@ -28,13 +28,18 @@ class PortfolioIndexPage(Page):
         default="Nos Clients",
         verbose_name="Titre de la section clients",
     )
+    images=StreamField([
+                ('image', ImageChooserBlock(required=True,label="image")),
+        ], blank=True, use_json_field=True)
+    # images.verbose_name = "images"
 
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("introduction"),
         FieldPanel("clients_title"),
-        InlinePanel("client_opinion", label="les clients"),
+        FieldPanel("images"),
+        InlinePanel("client_opinion", label="témoignages clients"),
     ]
 
     class Meta:
@@ -80,7 +85,7 @@ class PortfolioPage(Page):
     """Individual portfolio/project page"""
 
     client_name = models.CharField(
-        max_length=255, blank=True, verbose_name="Nom du client"
+        max_length=255, blank=True, verbose_name="Nom du project"
     )
 
     project_date = models.DateField(
@@ -113,12 +118,12 @@ class PortfolioPage(Page):
 
     project_url = models.URLField(blank=True, verbose_name="URL du projet")
 
-    body = StreamField([
-        ("text", blocks.RichTextBlock()),
-        ("image", ImageChooserBlock()),
-        ("list", blocks.ListBlock(blocks.CharBlock())),
-    ], use_json_field=True, blank=True)
-    body.verbose_name="les détails du projet"
+    # body = StreamField([
+    #     ("text", blocks.RichTextBlock()),
+    #     ("image", ImageChooserBlock()),
+    #     ("list", blocks.ListBlock(blocks.CharBlock())),
+    # ], use_json_field=True, blank=True)
+    # body.verbose_name="les détails du projet"
 
 
 
@@ -127,9 +132,11 @@ class PortfolioPage(Page):
         FieldPanel("project_date"),
         FieldPanel("featured_image"),
         FieldPanel("summary"),
-        FieldPanel("technologies"),
-        FieldPanel("project_url"),
-        FieldPanel("body"),
+        FieldPanel("challenge"),
+        FieldPanel("solution"),
+        FieldPanel("results"),
+
+        # FieldPanel("technologies"),
         # InlinePanel("gallery_images", label="Galerie d'images"),
     ]
 
