@@ -47,36 +47,40 @@ class AboutPage(Page):
 
     values_content = RichTextField(blank=True, verbose_name="Contenu des valeurs")
 
-    content = StreamField([
-        # History / Timeline
-        ('timeline', blocks.ListBlock(
+    timeline = StreamField([
+        ("items",blocks.ListBlock(
             blocks.StructBlock([
                 ('year', blocks.CharBlock(required=True,label="année")),
                 ('event', blocks.TextBlock(required=True,label='événement')),
-            ]),
-            label="histoire"
-        )),
-        # Key Numbers
-        ('key_numbers', blocks.ListBlock(
+                ('description', blocks.TextBlock(required=True,label='description')),
+            ])
+        ))
+        ], blank=True, use_json_field=True)
+    timeline.verbose_name = "histoire"
+    
+    key_numbers = StreamField([
+        ("numbers", blocks.ListBlock(
             blocks.StructBlock([
-                ('number', blocks.CharBlock(required=True,label="nombre")),
+                ('number', blocks.CharBlock(required=True,label="chiffre")),
                 ('label', blocks.CharBlock(required=True,label="label")),
-            ]),
-            label="chiffres clés"
-        )),
+            ])
+        ))
+        ], blank=True, use_json_field=True)
+    key_numbers.verbose_name = "chiffres clés"
+    
+    leadership = StreamField([
+            ("members", blocks.ListBlock(
+                blocks.StructBlock([
+                    ('photo', ImageChooserBlock(required=False,label="photo")),
+                    ('name', blocks.CharBlock(required=True,label="nom")),
+                    ('position', blocks.CharBlock(required=True,label="position")),
+                    ('bio', blocks.TextBlock(required=True,label="bio")),
+                ])
+            ))
+            ], blank=True, use_json_field=True)
+    leadership.verbose_name = "équipe dirigeante"
 
-        # Leadership Team
-        ('leadership', blocks.ListBlock(
-            blocks.StructBlock([
-                ('photo', ImageChooserBlock(required=False,label="photo")),
-                ('name', blocks.CharBlock(required=True,label="nom")),
-                ('position', blocks.CharBlock(required=True,label="position")),
-                ('bio', blocks.TextBlock(required=True,label="bio")),
-            ]),
-            label="équipe dirigeante"
-        )),
-    ], blank=True, use_json_field=True)
-    content.verbose_name = "Le Contenu de la Page"
+
 
     # team_title = models.CharField(
     #     max_length=255, default="Notre Équipe", verbose_name="Titre de l'équipe"
@@ -96,7 +100,9 @@ class AboutPage(Page):
         FieldPanel("vision_content"),
         FieldPanel("values_title"),
         FieldPanel("values_content"),
-        FieldPanel("content"),
+        FieldPanel("timeline"),
+        FieldPanel("key_numbers"),
+        FieldPanel("leadership"),
         # MultiFieldPanel([FieldPanel('seo_title'), FieldPanel('seo_description')], heading="SEO"),
     ]
     

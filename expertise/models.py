@@ -60,19 +60,23 @@ class ExpertisePage(Page):
     summary = models.TextField(max_length=500, blank=True, verbose_name="Résumé")
 
     description = RichTextField(blank=True, verbose_name="Description détaillée")
-    body = StreamField([
-        ("section", blocks.RichTextBlock()),
-        ("image", ImageChooserBlock(required=False)),
-        ("list", blocks.ListBlock(blocks.CharBlock(label="Point"))),
+    faq = StreamField([
+        ("items",blocks.ListBlock(
+            blocks.StructBlock([
+                ("question", blocks.RichTextBlock(label="Question")),
+                ("answer", blocks.RichTextBlock(label="Réponse")),
+            ])
+        ))
     ], use_json_field=True, blank=True)
-    body.verbose_name="Le Contenu de la Page"
+    faq.verbose_name="FAQ"
+
 
 
     content_panels = Page.content_panels + [
         FieldPanel("featured_image"),
         FieldPanel("summary"),
         FieldPanel("description"),
-        FieldPanel("body"),
+        FieldPanel("faq"),
     ]
 
     class Meta:

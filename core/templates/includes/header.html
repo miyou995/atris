@@ -1,0 +1,39 @@
+{% load wagtailcore_tags navigation_tags %}
+
+<header>
+    {% get_site_root as site_root %}
+    <nav aria-label="Main navigation">
+        <ul>
+            <li>
+                <a href="{% pageurl site_root %}" 
+                   {% if request.path == site_root.url %}class="active"{% endif %}>
+                    Home
+                </a>
+            </li>
+            {% for menuitem in site_root.get_children.live.in_menu %}
+                <li>
+                    <a href="{% pageurl menuitem %}"
+                       {% if request.path == menuitem.url %}class="active"{% endif %}>
+                        {{ menuitem.title }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</header>
+
+
+
+
+<style>
+    nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+}
+/* Or use pipe separators */
+nav li + li::before {
+    content: "|";
+    margin-right: 1rem;
+}
+</style>

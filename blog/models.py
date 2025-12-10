@@ -9,39 +9,18 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.snippets.models import register_snippet
 from django.forms import CheckboxSelectMultiple
 from modelcluster.fields import ParentalKey
+from taggit.models import TaggedItemBase
+from modelcluster.tags import ClusterTaggableManager
 
 
-#### this is the blog
-# @register_snippet
-class BlogCategory(models.Model):
-    page = ParentalKey(
-        "blog.BlogIndexPage",
-        related_name="categories",
+
+
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'blog.BlogPage',
+        related_name='tagged_items',
         on_delete=models.CASCADE
     )
-    name = models.CharField(max_length=100, verbose_name="Catégorie")
-    slug = models.SlugField(unique=True)
-
-    panels = [
-        FieldPanel("name"),
-        FieldPanel("slug"),
-    ]
-
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = "Catégorie"
-        verbose_name_plural = "Catégories"
-
-
-class ArticleType(models.TextChoices):
-    TECH = "tech", "Tech"
-    ACTUALITES = "actualites", "Actualités"
-    INTERNES = "internes", "Interne"
-    CULTURE = "culture", "Culture d’entreprise"
-
-
 
 class BlogIndexPage(Page):
     """Index page for Blog / Insights"""
@@ -53,15 +32,23 @@ class BlogIndexPage(Page):
     hero_subtitle = models.CharField(
         max_length=500, blank=True, verbose_name="Sous-titre"
     )
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Image d'en-tête",
+    )
 
     intro = RichTextField(blank=True, verbose_name="Introduction")
+
 
     content_panels = Page.content_panels + [
         FieldPanel("hero_title"),
         FieldPanel("hero_subtitle"),
         FieldPanel("intro"),
-        InlinePanel("categories", label="Catégories"),
-        
+        FieldPanel("hero_image"),
 
     ]
 
@@ -72,8 +59,15 @@ class BlogIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        # Get all child blog pages
-        context["posts"] = self.get_children().live().order_by("-first_published_at")
+        tag = request.GET.get('tag')
+
+        posts = self.get_children().live().specific().order_by("-first_published_at")
+
+        if tag:
+            posts = posts.filter(tags__name=tag)
+
+        context["posts"] = posts
+        context["selected_tag"] = tag
         return context
     
     subpage_types = ["BlogPage"]
@@ -82,19 +76,8 @@ class BlogIndexPage(Page):
 #addeded vcomment 
 
 class BlogPage(Page):
+    tags = ClusterTaggableManager(through="blog.BlogPageTag", blank=True)
     subtitle = models.CharField(max_length=250, blank=True)
-    type = models.CharField(
-        max_length=50,
-        choices=ArticleType.choices,
-        default=ArticleType.TECH,
-        verbose_name="Type d’article",
-    )
-    categories = models.ManyToManyField(
-        "blog.BlogCategory",
-        related_name="articles",
-        blank=True,
-        verbose_name="Catégories"
-    )
     image = models.ForeignKey(
         "wagtailimages.Image",
         null=True,
@@ -105,29 +88,31 @@ class BlogPage(Page):
     )
     date = models.DateField('Date')
     author = models.CharField(max_length=255, blank=True,verbose_name="auteur")
+    reading_time = models.IntegerField(blank=True, null=True, verbose_name="Temps de lecture")
+    content = RichTextField(blank=True, verbose_name="Contenu")
    
-    body = StreamField(
-        [
-            ("paragraph", blocks.RichTextBlock()),
-            ("image", ImageChooserBlock()),
-            ("quote", blocks.BlockQuoteBlock()),
-        ],
-        use_json_field=True,
-        blank=True,
-    )
+    # body = StreamField(
+    #     [
+    #         ("paragraph", blocks.RichTextBlock()),
+    #         ("image", ImageChooserBlock()),
+    #         ("quote", blocks.BlockQuoteBlock()),
+    #     ],
+    #     use_json_field=True,
+    #     blank=True,
+    # )
 
     content_panels = Page.content_panels + [
         MultiFieldPanel(
             [
                 FieldPanel("subtitle"),
-                FieldPanel("type"),
-                FieldPanel("categories", widget=CheckboxSelectMultiple),
                 FieldPanel("date"),
                 FieldPanel("image"),
+                FieldPanel("tags"),    
+                FieldPanel("content"),
             ],
             heading="Informations",
         ),
-        FieldPanel("body"),
+        # FieldPanel("body"),
     ]
 
     parent_page_types = ["blog.BlogIndexPage"]

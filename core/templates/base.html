@@ -1,6 +1,7 @@
 {% load static %}
 {% load wagtailcore_tags %}
 {% load wagtailuserbar %}
+
 {% load menu_tags %}
 
 <!DOCTYPE html>
@@ -82,9 +83,9 @@
                     </nav>
                 </div>
             </div>
-        </header>
-        
-
+        </header> 
+        {% wagtailuserbar %}
+        {% include "includes/header.html" %}
         {# Main Content #}
         <main>
             {% block content %}{% endblock %}
