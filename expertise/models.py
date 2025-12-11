@@ -43,6 +43,7 @@ class ExpertiseIndexPage(Page):
         context = super().get_context(request)
         # Get all child expertise pages
         context["expertises"] = self.get_children().live().specific()
+        print("image--------->>>",context["expertises"])
         return context
 
 
