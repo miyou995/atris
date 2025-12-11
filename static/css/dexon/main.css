@@ -89,7 +89,8 @@ START: Theme Default CSS
   --tj-color-text-body-3: #67787a;
   --tj-color-text-body-4: #18292c;
   --tj-color-text-body-5: rgba(255, 255, 255, 0.8);
-  --tj-color-theme-primary: #1e8a8a;
+  --tj-color-theme-primary: #4A90E2;
+  --tj-color-theme-hover: #F5A623;
   --tj-color-theme-bg: #d8e5e5;
   --tj-color-theme-bg-2: #cee0e0;
   --tj-color-theme-bg-3: #202e30;

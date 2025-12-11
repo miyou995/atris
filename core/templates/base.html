@@ -1,23 +1,30 @@
 {% load static %}
 {% load wagtailcore_tags %}
 {% load wagtailuserbar %}
-
 {% load menu_tags %}
+{% load wagtailcore_tags navigation_tags %}
 
-<!DOCTYPE html>
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <title>
-            {% block title %}
-            {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
-            {% endblock %}
-            {% block title_suffix %}
-            {% wagtail_site as current_site %}
-            {% if current_site and current_site.site_name %} - {{ current_site.site_name }}{% endif %}
-            {% endblock %}
-        </title>
-        {% if page.search_description %}
+
+<!doctype html>
+<html class="no-js" lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+
+  <!-- Site Title -->
+  <title>
+        {% block title %}
+        {% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}
+        {% endblock %}
+        {% block title_suffix %}
+        {% wagtail_site as current_site %}
+        {% if current_site and current_site.site_name %} - {{ current_site.site_name }}{% endif %}
+        {% endblock %}
+    </title>
+    {% if page.search_description %}
         <meta name="description" content="{{ page.search_description }}" />
         {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,34 +32,38 @@
         {# Force all links in the live preview panel to be opened in a new tab #}
         {% if request.in_preview_panel %}
         <base target="_blank">
-        {% endif %}
+    {% endif %}
 
-        {# Google Fonts #}
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
+  <!-- Place favicon.ico in the root directory -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css"/>
 
-        {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}">
+    {# Global stylesheets #}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/core.css' %}">
 
-        {% block extra_css %}
-            <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-            <link rel="stylesheet" href="assets/css/font-awesome-pro.min.css">
-            <link rel="stylesheet" href="assets/css/animate.min.css">
-            <link rel="stylesheet" href="assets/css/bexon-icons.css">
-            <link rel="stylesheet" href="assets/css/nice-select.css">
-            <link rel="stylesheet" href="assets/css/swiper.min.css">
-            <link rel="stylesheet" href="assets/css/venobox.min.css">
-            <link rel="stylesheet" href="assets/css/odometer-theme-default.css">
-            <link rel="stylesheet" href="assets/css/meanmenu.css">
-            <link rel="stylesheet" href="assets/css/main.css">
-        {% endblock %}  
-    </head>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/images/fav.png">
 
-    <body class="{% block body_class %}{% endblock %}">
-        {% comment %} <div class="tj-preloader is-loading">
-            <div class="tj-preloader-inner">
+  <!-- CSS here -->
+  <link rel="stylesheet" href="{% static 'css/dexon/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/font-awesome-pro.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/animate.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/bexon-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/nice-select.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/swiper.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/venobox.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/odometer-theme-default.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/meanmenu.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dexon/main.css' %}">
+</head>
+
+<body>
+  <div class="body-overlay"></div>
+
+  <!-- Preloader Start -->
+  <div class="tj-preloader is-loading">
+        <div class="tj-preloader-inner">
             <div class="tj-preloader-ball-wrap">
                 <div class="tj-preloader-ball-inner-wrap">
                 <div class="tj-preloader-ball-inner">
@@ -62,97 +73,47 @@
                 </div>
                 <div id="tj-weave-anim" class="tj-preloader-text">Loading...</div>
             </div>
-            </div>
-            <div class="tj-preloader-overlay"></div>
-        </div> {% endcomment %}
+        </div>
+        <div class="tj-preloader-overlay"></div>
+  </div>
+  <!-- back to top start -->
+  <div id="tj-back-to-top"><span id="tj-back-to-top-percentage"></span></div>
 
-        {% wagtailuserbar %}
+  <div id="magic-cursor">
+        <div id="ball"></div>
+  </div>
 
-        {# Header with Navigation #}
-        <header class="site-header">
-            <div class="container">
-                <div class="header-content">
-                    <a href="/" class="site-logo">Atris</a>
-                    
-                    <button class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-                        ☰
-                    </button>
-                    
-                    <nav class="main-nav">
-                        {% main_menu site=request.site template="menus/main_menu.html" %}
-                    </nav>
-                </div>
-            </div>
-        </header> 
-        {% wagtailuserbar %}
-        {% include "includes/header.html" %}
-        {# Main Content #}
-        <main>
-            {% block content %}{% endblock %}
-        </main>
-
-        {# Footer #}
-        <footer class="site-footer">
-            <div class="container">
-                <div class="footer-content">
-                    <div class="footer-section">
-                        <h4>À Propos</h4>
-                        <p>Une entreprise professionnelle dédiée à l'excellence et l'innovation.</p>
-                    </div>
-                    
-                    <div class="footer-section">
-                        <h4>Navigation</h4>
-                        <ul>
-                            {% main_menu template="menus/footer_menu.html" %}
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-section">
-                        <h4>Contact</h4>
-                        <ul>
-                            <li>Email: contact@atris.com</li>
-                            <li>Téléphone: +33 1 23 45 67 89</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="footer-section">
-                        <h4>Suivez-nous</h4>
-                        <ul>
-                            <li><a href="#" aria-label="LinkedIn">LinkedIn</a></li>
-                            <li><a href="#" aria-label="Twitter">Twitter</a></li>
-                            <li><a href="#" aria-label="Facebook">Facebook</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="footer-bottom">
-                    <p>&copy; {% now "Y" %} Atris. Tous droits réservés.</p>
-                </div>
-            </div>
-        </footer>
-
-        {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/core.js' %}"></script>
-        <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  {% comment %} <div class="search-popup-overlay"></div> {% endcomment %}
 
 
-        {% block extra_js %}
-            <script src="assets/js/jquery.min.js"></script>
-            <script src="assets/js/bootstrap.bundle.min.js"></script>
-            <script src="assets/js/gsap.min.js"></script>
-            <script src="assets/js/ScrollSmoother.js"></script>
-            <script src="assets/js/gsap-scroll-to-plugin.min.js"></script>
-            <script src="assets/js/gsap-scroll-trigger.min.js"></script>
-            <script src="assets/js/gsap-split-text.min.js"></script>
-            <script src="assets/js/jquery.nice-select.min.js"></script>
-            <script src="assets/js/swiper.min.js"></script>
-            <script src="assets/js/odometer.min.js"></script>
-            <script src="assets/js/venobox.min.js"></script>
-            <script src="assets/js/appear.min.js"></script>
-            <script src="assets/js/wow.min.js"></script>
-            <script src="assets/js/meanmenu.js"></script>
-            <script src="assets/js/main.js"></script>
-        {% endblock %}
-    </body>
+    {% include "includes/header.html" %}
+
+        {% block content %}{% endblock content %}
+
+    {% include "includes/footer.html" %}
+
+
+
+
+  <!-- JS here -->
+  <script src="{% static 'js/dexon/jquery.min.js' %}"></script>
+  <script src="{% static 'js/dexon/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/dexon/gsap.min.js' %}"></script>
+  <script src="{% static 'js/dexon/ScrollSmoother.js' %}"></script>
+  <script src="{% static 'js/dexon/gsap-scroll-to-plugin.min.js' %}"></script>
+  <script src="{% static 'js/dexon/gsap-scroll-trigger.min.js' %}"></script>
+  <script src="{% static 'js/dexon/gsap-split-text.min.js' %}"></script>
+  <script src="{% static 'js/dexon/jquery.nice-select.min.js' %}"></script>
+  <script src="{% static 'js/dexon/swiper.min.js' %}"></script>
+  <script src="{% static 'js/dexon/odometer.min.js' %}"></script>
+  <script src="{% static 'js/dexon/venobox.min.js' %}"></script>
+  <script src="{% static 'js/dexon/appear.min.js' %}"></script>
+  <script src="{% static 'js/dexon/wow.min.js' %}"></script>
+  <script src="{% static 'js/dexon/meanmenu.js' %}"></script>
+  <script src="{% static 'js/dexon/imagesloaded-pkgd.js' %}"></script>
+  <script src="{% static 'js/dexon/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'js/dexon/magiccursor.js' %}"></script>
+  <script src="{% static 'js/dexon/main.js' %}"></script>
+</body>
+
 </html>
