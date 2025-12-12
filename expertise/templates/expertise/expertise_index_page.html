@@ -32,25 +32,23 @@
             <div class="page-header-overlay"  {% if page.hero_image %}
                 data-bg-image="{{ page.hero_image.file.url }}"{% endif %}></div> 
         </section>
-        <section class="tj-service-section service-4 section-gap">
+         <section class="tj-project-section section-gap">
           <div class="container">
-                <div class="row row-gap-4">
-                    {% for expertise in expertises %}
-                        <div class="col-lg-4 col-md-6">
-                            <div class="service-item style-4 wow fadeInUp" data-wow-delay=".9s">
+            <div class="row row-gap-4">
+                {% for expertise in expertises %}
+                    <div class="col-xl-4 col-md-6">
+                        <div class="project-item wow fadeInUp" data-wow-delay=".5s">
+                            <div class="project-img">
                                 {% if expertise.featured_image %}
-                                    <div class="service-icon">
-                                       {% comment %} {{ expertise.featured_image.file.url }} {% endcomment %}
-                                          <img src="{{ expertise.featured_image.file.url }}" alt="{{ expertise.title }}">
-
-                                    </div>
+                                    <img src="{{ expertise.featured_image.file.url }}" alt="{{ expertise.title }}">
                                 {% else %}
-                                    <div class="service-icon">
-                                        <i class="tji-service-4"></i>
-                                    </div>
+                                    <img src="{% static 'images/project/project-8.webp' %}" alt="">
                                 {% endif %}
+                            </div>
+                            <div class="project-content">
+                                {% comment %} <span class="categories"><a href="{% pageurl expertise %}">{{ expertise.title }}</a></span> {% endcomment %}
                                 <div class="service-content">
-                                    <h4 class="title"><a href="{% pageurl expertise %}">{{ expertise.title }}</a></h4>
+                                    <h4 class="title pb-3"><a href="{% pageurl expertise %}">{{ expertise.title }}</a></h4>
                                     {% if expertise.summary %}
                                         <p class="desc">
                                             {{ expertise.summary }}
@@ -63,10 +61,12 @@
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
+                    </div>
+                {% endfor %}
+            </div>
           </div>
         </section>
+       
 
         <section class="tj-contact-section section-gap section-gap-x">
           <div class="container">

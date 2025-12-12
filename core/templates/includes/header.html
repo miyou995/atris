@@ -128,7 +128,88 @@
 </header>
 
 
+  <header class="header-area header-3 h10-header  header-duplicate header-sticky section-gap-x">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <div class="header-wrapper">
+            <!-- site logo -->
+            <div class="site_logo">
+              <a class="logo" href="index.html"><img src="{% static 'images/logos/atris.png' %}" alt=""></a>
+            </div>
+            {% get_site_root as site_root %}
+            <!-- navigation -->
+            <div class="menu-area d-none d-lg-inline-flex align-items-center">
+                <nav class="mainmenu">
+                    <ul>
+                        <li><a href="{% pageurl site_root %}"
+                            {% if request.path == site_root.url %}class="active"{% endif %}>
+                                Accueil
+                            </a>
+                        </li>
+                        {% for menuitem in site_root.get_children.live.in_menu %}
+                            {% with subitems=menuitem.get_children.live.in_menu %}
+                                    <li {% if subitems.exists %}class="has-dropdown"{% endif %} >
+                                        <a href="{% pageurl menuitem %}"> {{ menuitem.title }}</a>
+                                        {% if subitems.exists %}
+                                            <ul class="sub-menu  mega-menu-service">
+                                                {% for child in subitems %}
+                                                    <li> <a class="mega-menu-service-single" href="{% pageurl child %}"> <span
+                                                        class="mega-menu-service-icon">
+                                                        <i class="tji-service-1"></i>
+                                                        </span> <span class="mega-menu-service-title">{{ child.title }}</span> <span
+                                                            class="mega-menu-service-nav"><i class="tji-arrow-right-long"></i><i
+                                                            class="tji-arrow-right-long"></i></span></a>
+                                                    </li>
+                                            {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </li>
+                            {% endwith %}
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </div>
 
+            <!-- header right info -->
+             <div class="header-right-item d-none d-lg-inline-flex">
+            </div> 
+
+            <!-- menu bar -->
+            <div class="menu_bar mobile_menu_bar d-lg-none">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Popup -->
+    <div class="search_popup">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-8">
+            <div class="tj_search_wrapper">
+              <div class="search_form">
+                <form action="#">
+                  <div class="search_input">
+                    <div class="search-box">
+                      <input class="search-form-input" type="text" placeholder="Type Words and Hit Enter" required>
+                      <button type="submit">
+                        <i class="tji-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 
 
 
