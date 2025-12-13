@@ -43,8 +43,11 @@ class ExpertiseIndexPage(Page):
         context = super().get_context(request)
         # Get all child expertise pages
         context["expertises"] = self.get_children().live().specific()
-        print("image--------->>>",context["expertises"])
+        # print("image--------->>>",context["expertises"])
         return context
+    
+    def get_expertises(self):
+        return self.get_children().live().specific()
 
 
 class ExpertisePage(Page):
@@ -85,3 +88,11 @@ class ExpertisePage(Page):
 
     parent_page_types = ["expertise.ExpertiseIndexPage"]
     subpage_types = []
+    
+    def get_context(self, request):
+        context = super().get_context(request)
+        parent = self.get_parent().specific
+        context["expertises"] = parent.get_expertises()
+
+        print("expertises--------->>>",context["expertises"])
+        return context

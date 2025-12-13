@@ -6,6 +6,7 @@ from wagtail.models import Orderable, Page
 from wagtail.search import index
 from wagtail import blocks
 from wagtail.images.blocks import ImageChooserBlock
+from django.core.paginator import Paginator
 
 
 
@@ -31,6 +32,15 @@ class PortfolioIndexPage(Page):
     images=StreamField([
                 ('image', ImageChooserBlock(required=True,label="image")),
         ], blank=True, use_json_field=True)
+    
+    hero_image = models.ForeignKey(
+        "wagtailimages.Image",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+        verbose_name="Image d'en-tête",
+    )
     # images.verbose_name = "images"
 
     content_panels = Page.content_panels + [
@@ -38,7 +48,7 @@ class PortfolioIndexPage(Page):
         FieldPanel("hero_subtitle"),
         FieldPanel("introduction"),
         FieldPanel("clients_title"),
-        FieldPanel("images"),
+        FieldPanel("hero_image"),
         InlinePanel("client_opinion", label="témoignages clients"),
     ]
 
@@ -49,7 +59,13 @@ class PortfolioIndexPage(Page):
     def get_context(self, request):
         context = super().get_context(request)
         # Get all child portfolio pages
-        context["projects"] = self.get_children().live().specific()
+        # context["projects"] = self.get_children().live().specific().order_by('-project_date')
+        projects_qs = self.get_children().live().specific()
+
+        paginator = Paginator(projects_qs, 6)
+        page_number = request.GET.get('page')
+
+        context['projects'] = paginator.get_page(page_number)
         return context
 
 
