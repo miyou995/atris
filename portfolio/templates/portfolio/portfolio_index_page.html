@@ -1,53 +1,136 @@
 {% extends "base.html" %}
+{% load static %}
 {% load wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-    <section class="hero">
-        <div class="container">
-            <div class="hero-content">
-                <h1>{{ page.hero_title }}</h1>
-                {% if page.hero_subtitle %}<p>{{ page.hero_subtitle }}</p>{% endif %}
-            </div>
-        </div>
-    </section>
+    <div id="smooth-content">
+      <main id="primary" class="site-main">
+        <div class="space-for-header"></div>
+        <!-- start: Breadcrumb Section -->
+        <section class="tj-page-header section-gap-x" 
+            {% if page.hero_image %}
+                    data-bg-image="{{ page.hero_image.file.url }}"
+            {% else %}
+                data-bg-image="{% static 'images/bg/pheader-bg.webp' %}"
+            {% endif %}
+            >
 
-    <section class="section">
-        <div class="container">
-            {% if page.introduction %}
-                <div class="section-header">{{ page.introduction|richtext }}</div>
-            {% endif %}
-            
-            <div class="grid grid-3 mb-xl">
-                {% for project in projects %}
-                    <div class="card">
-                        {% if project.featured_image %}
-                            {% image project.featured_image fill-400x300 as img %}
-                            <img src="{{ img.url }}" alt="{{ project.title }}" style="width: 20%; border-radius: var(--radius-lg); margin-bottom: var(--spacing-md);">
-                        {% endif %}
-                        <h3>{{ project.title }}</h3>
-                        {% if project.summary %}<p>{{ project.summary }}</p>{% endif %}
-                        <a href="{% pageurl project %}" class="btn btn-secondary mt-md">Voir le projet</a>
+          <div class="container">
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="tj-page-header-content text-center">
+                  <h1 class="tj-page-title">Portfolio</h1>
+                  <div class="tj-page-link">
+                    <span><i class="tji-home"></i></span>
+                    <span>
+                      <a href="index.html">Home</a>
+                    </span>
+                    <span><i class="tji-arrow-right"></i></span>
+                    <span>
+                      <span>Portfolio</span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="page-header-overlay" 
+                {% if page.hero_image %}
+                        data-bg-image="{{ page.hero_image.file.url }}"
+                {% else %}
+                    data-bg-image="{% static 'images/bg/pheader-bg.webp' %}"
+                {% endif %}>
+            </div>
+        </section>
+        <section class="tj-project-section section-gap">
+            <div class="container">
+                <div class="row row-gap-4">
+                    {% for project in projects %}
+                        <div class="col-xl-4 col-md-6">
+                            <div class="project-item wow fadeInUp" data-wow-delay=".1s">
+                                <div class="project-img">
+                                    {% if project.featured_image %}
+                                        <img src="{{ project.featured_image.file.url }}" alt="{{ project.title }}">
+                                    {% else %}
+                                        <img src="{% static 'images/project/project-8.webp' %}" alt="">
+                                    {% endif %}
+                                </div>
+                                <div class="project-content">
+                                    <span class="categories">
+                                        <a href="{% pageurl project %}">{{ project.project_date }}</a>
+                                    </span>
+                                    <div class="project-text">
+                                        <h4 class="title">
+                                            <a href="{% pageurl project %}">{{ project.client_name }}</a>
+                                        </h4>
+                                        <a class="project-btn" href="{% pageurl project %}">
+                                            <i class="tji-arrow-right-big"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                {% if projects.paginator.num_pages > 1 %}
+                    <div class="tj-pagination d-flex justify-content-center">
+                        <ul>
+                            {% if projects.has_previous %}
+                                <li>
+                                    <a class="page-numbers prev" href="?page={{ projects.previous_page_number }}">
+                                        <i class="tji-arrow-left-long"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+
+                            {% for num in projects.paginator.page_range %}
+                                {% if projects.number == num %}
+                                    <li>
+                                        <span class="page-numbers current">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li>
+                                        <a class="page-numbers" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+
+                            {% if projects.has_next %}
+                                <li>
+                                    <a class="page-numbers next" href="?page={{ projects.next_page_number }}">
+                                        <i class="tji-arrow-right-long"></i>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        </ul>
                     </div>
-                {% endfor %}
+                {% endif %}
+
             </div>
-            
-            {% if page.client_opinion.all %}
-            <div class="section-header">
-                <h2>{{ page.clients_title }}</h2>
-            </div>
-            <div class="grid grid-4">
-                {% for logo in page.client_opinion.all %}
-                    <div class="card text-center">
-                        {% if logo.logo %}
-                            {% image logo.logo max-200x100 as img %}
-                            <img src="{{ img.url }}" alt="{{ logo.client_name }}" style="max-width: 100%; height: auto;">
-                        {% else %}
-                            <p>{{ logo.client_name }}</p>
-                        {% endif %}
+        </section>
+
+        <section class="tj-cta-section">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <div class="cta-area">
+                  <div class="cta-content">
+                    <h2 class="title title-anim">Let’s Build Future Together.</h2>
+                    <div class="cta-btn wow fadeInUp" data-wow-delay=".6s">
+                      <a class="tj-primary-btn btn-dark" href="contact.html">
+                        <span class="btn-text"><span>Get Started Now</span></span>
+                        <span class="btn-icon"><i class="tji-arrow-right-long"></i></span>
+                      </a>
                     </div>
-                {% endfor %}
+                  </div>
+                  <div class="cta-img">
+                    <img src="{% static 'images/cta/cta-bg.webp' %}" alt="">
+                  </div>
+                </div>
+              </div>
             </div>
-            {% endif %}
-        </div>
-    </section>
+          </div>
+        </section>
+      </main>
+    </div>
 {% endblock %}
